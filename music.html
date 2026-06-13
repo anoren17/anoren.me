@@ -29,7 +29,15 @@
       <p class="sub rise d2">The songs I can't stop playing.</p>
     </section>
 
-    <section class="feed rise d3" id="feed"></section>
+    <section class="carousel music-carousel rise d3">
+      <div class="stage" id="stage" aria-roledescription="carousel"></div>
+
+      <div class="car-controls">
+        <span class="car-counter"><b id="cur">01</b> / <span id="total">42</span></span>
+      </div>
+
+      <div class="thumbs music-thumbs" id="thumbs"></div>
+    </section>
 
   </main>
 
@@ -38,41 +46,39 @@
   </footer>
 
   <script>
-    // Every shared link from the original site, in order.
-    // a = Amazon Music [asin, id, height]; y = YouTube [videoId, title];
-    // n = note [date, text]; h = heading; l = link [url, label, videoId]
+    // a = Amazon Music [asin, id, height, title]; y = YouTube [videoId, title];
+    // n = note [date, text]; h = heading [html]
     const items = [
-      ['a', 'B01N6J9HCO', '7gZBEe5QaF', 352],
+      ['a', 'B01N6J9HCO', '7gZBEe5QaF', 352, 'Kina Chir'],
       ['y', 'oRZ0cfZ9SeU', 'Vilen — Ek Raat'],
-      ['a', 'B094MQK737', '5H4tipmXvo', 390],
-      ['a', 'B07X83TF2P', 'GInRR19YJd', 390],
-      ['a', 'B0B7B1RRLM', 'AIKngnm9yP', 390],
-      ['a', 'B074QFMHBY', 'XdwDycClsy', 390],
-      ['a', 'B09V6DP45M', 'WjG2QlesYQ', 390],
-      ['a', 'B000WLMMBW', '3qctVWmDTv', 390],
-      ['a', 'B002EHTTHW', 'gTva9E4JBY', 390],
-
-      ['a', 'B002A5ZD96', 'Fop6qulavJ', 390],
-      ['a', 'B001NZXFFI', 'AvF3BH4tT6', 390],
+      ['a', 'B094MQK737', '5H4tipmXvo', 390, '3:15 (Breathe)'],
+      ['a', 'B07X83TF2P', 'GInRR19YJd', 390, 'love nwantiti'],
+      ['a', 'B0B7B1RRLM', 'AIKngnm9yP', 390, 'Safar'],
+      ['a', 'B074QFMHBY', 'XdwDycClsy', 390, 'Chand Sifarish'],
+      ['a', 'B09V6DP45M', 'WjG2QlesYQ', 390, 'this is what heartbreak feels like'],
+      ['a', 'B000WLMMBW', '3qctVWmDTv', 390, 'Lonely'],
+      ['a', 'B002EHTTHW', 'gTva9E4JBY', 390, 'Numb'],
+      ['a', 'B002A5ZD96', 'Fop6qulavJ', 390, 'Fairytale'],
+      ['a', 'B001NZXFFI', 'AvF3BH4tT6', 390, 'Bandoleros'],
       ['n', '5/17', ''],
-      ['a', 'B0B5LBDK7R', 'DhWzxtrLec', 390],
+      ['a', 'B0B5LBDK7R', 'DhWzxtrLec', 390, 'она звонила мне'],
       ['n', '2/22', ''],
-      ['a', 'B096LFPB89', '9V4ho6MjHO', 390],
+      ['a', 'B096LFPB89', '9V4ho6MjHO', 390, 'Detstvo'],
       ['n', '1/29', ''],
-      ['a', 'B0BKYYFCFR', 'JfX392Yvp5', 390],
+      ['a', 'B0BKYYFCFR', 'JfX392Yvp5', 390, 'Childhood'],
       ['n', '1/27', ''],
-      ['a', 'B01MSIOX2M', 'feVjg394T3', 390],
+      ['a', 'B01MSIOX2M', 'feVjg394T3', 390, 'Intro (Infected)'],
       ['n', '1/11', 'Gonna be on repeat next few days'],
       ['y', 'vSINZsLxs8k', 'Sickick — Infected'],
-      ['a', 'B0791J764L', 'nQDwW3ERzG', 390],
-      ['a', 'B0BHTGLFBQ', '2pQTjCVt5G', 390],
+      ['a', 'B0791J764L', 'nQDwW3ERzG', 390, 'Aap Ki Nazron Ne Samjha'],
+      ['a', 'B0BHTGLFBQ', '2pQTjCVt5G', 390, 'Moonlight'],
       ['n', '11/26', 'On repeat today ¯\\_(ツ)_/¯. One hell of a day, full of stress and high levels of cortisol.'],
-      ['a', 'B0758XZ5XG', '0znkbFgYTB', 390],
-      ['a', 'B09NLD8Q9D', 'NEfjMIgSSC', 390],
-      ['a', 'B095F7BRBJ', 'ggMoFuL6Hm', 390],
+      ['a', 'B0758XZ5XG', '0znkbFgYTB', 390, 'Drowning'],
+      ['a', 'B09NLD8Q9D', 'NEfjMIgSSC', 390, 'The Perfect Girl'],
+      ['a', 'B095F7BRBJ', 'ggMoFuL6Hm', 390, 'Blood & Water'],
       ['n', '', "But blood's not thicker than water after all"],
-      ['a', 'B01BM5MW2K', 'BlzTWR3Vku', 600],
-      ['a', 'B09SJSVZS7', 'CWWuS0lmwm', 600],
+      ['a', 'B01BM5MW2K', 'BlzTWR3Vku', 600, 'XXXTentacion'],
+      ['a', 'B09SJSVZS7', 'CWWuS0lmwm', 600, 'Metamorphosed'],
       ['n', '10/22', 'Respiration is my top repeat song these days.'],
       ['h', 'Evolution of <em>Petrunko</em>'],
       ['y', 'Skhaf0yQrQc', 'The Great Voices of Bulgaria — Bre Petrunko'],
@@ -87,39 +93,126 @@
       ['n', '10/19', '']
     ];
 
-    const feed = document.getElementById('feed');
-    const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    const N = items.length;
+    const stage  = document.getElementById('stage');
+    const thumbs = document.getElementById('thumbs');
+    const curEl  = document.getElementById('cur');
+    document.getElementById('total').textContent = String(N).padStart(2, '0');
 
-    items.forEach(it => {
-      const el = document.createElement('div');
+    const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+    function amazonSrc(asin, id) {
+      return `https://music.amazon.com/embed/${asin}/?id=${id}&marketplaceId=ATVPDKIKX0DER&musicTerritory=US`;
+    }
+    function youtubeSrc(vid) {
+      return `https://www.youtube.com/embed/${vid}`;
+    }
+
+    function injectEmbed(slide, it) {
+      let iframe = slide.querySelector('iframe');
+      if (iframe) {
+        iframe.src = it[0] === 'a' ? amazonSrc(it[1], it[2]) : youtubeSrc(it[1]);
+        return;
+      }
+      const wrap = document.createElement('div');
+      iframe = document.createElement('iframe');
+      iframe.loading = 'lazy';
+      if (it[0] === 'a') {
+        wrap.className = 'sl-embed-wrap';
+        iframe.src = amazonSrc(it[1], it[2]);
+        iframe.height = it[3];
+        iframe.style.cssText = 'display:block;width:100%;border:0';
+      } else {
+        wrap.className = 'sl-embed-wrap sl-yt';
+        iframe.src = youtubeSrc(it[1]);
+        iframe.title = esc(it[2]);
+        iframe.allow = 'accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+        iframe.allowFullscreen = true;
+        iframe.style.cssText = 'border:0';
+      }
+      wrap.appendChild(iframe);
+      slide.appendChild(wrap);
+    }
+
+    // Build slides + thumbs
+    items.forEach((it, i) => {
+      const slide = document.createElement('div');
+      slide.className = 'slide' + (i === 0 ? ' active' : '');
       const type = it[0];
 
-      if (type === 'a') {
-        const [, asin, id, h] = it;
-        el.className = 'feed-item';
-        el.innerHTML =
-          '<span class="f-label">Amazon Music</span>' +
-          '<div class="f-embed"><iframe loading="lazy" height="' + h + '" ' +
-          'src="https://music.amazon.com/embed/' + asin +
-          '/?id=' + id + '&marketplaceId=ATVPDKIKX0DER&musicTerritory=US"></iframe></div>';
-      } else if (type === 'y') {
-        const [, vid, title] = it;
-        el.className = 'feed-item';
-        el.innerHTML =
-          '<span class="f-label">YouTube · ' + esc(title) + '</span>' +
-          '<div class="f-embed f-yt"><iframe loading="lazy" src="https://www.youtube.com/embed/' + vid +
-          '" title="' + esc(title) + '" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>';
+      if (type === 'a' || type === 'y') {
+        slide.classList.add('slide-embed');
+        if (i === 0) injectEmbed(slide, it);
       } else if (type === 'n') {
         const [, date, text] = it;
-        el.className = 'feed-item f-note';
-        el.innerHTML =
-          (date ? '<span class="d">' + esc(date) + '</span>' : '') +
-          (text ? '<div class="t">' + esc(text) + '</div>' : '');
+        slide.classList.add('slide-note');
+        slide.innerHTML =
+          (date ? `<span class="sn-date">${esc(date)}</span>` : '') +
+          (text ? `<p class="sn-text">${esc(text)}</p>` : '');
       } else if (type === 'h') {
-        el.className = 'f-heading';
-        el.innerHTML = it[1];
+        slide.classList.add('slide-heading');
+        slide.innerHTML = `<div class="sh-text">${it[1]}</div>`;
       }
-      feed.appendChild(el);
+      stage.appendChild(slide);
+
+      // Thumbnail
+      const t = document.createElement('button');
+      t.className = 'thumb' + (i === 0 ? ' active' : '');
+      if (type === 'a') {
+        t.innerHTML = `<span class="th-src">♫</span><span class="th-ttl">${esc(it[4] || '')}</span>`;
+      } else if (type === 'y') {
+        t.innerHTML = `<span class="th-src">▶</span><span class="th-ttl">${esc(it[2])}</span>`;
+      } else if (type === 'n') {
+        const lbl = it[1] || (it[2] ? it[2].slice(0, 20) + '…' : '·');
+        t.innerHTML = `<span class="th-src th-note">—</span><span class="th-ttl">${esc(lbl)}</span>`;
+      } else {
+        t.innerHTML = `<span class="th-src th-head">§</span><span class="th-ttl">${it[1].replace(/<[^>]*>/g, '')}</span>`;
+      }
+      t.addEventListener('click', () => go(i));
+      thumbs.appendChild(t);
+    });
+
+    // Nav arrows
+    const mkBtn = (cls, txt, fn) => {
+      const b = document.createElement('button');
+      b.className = 'car-btn ' + cls;
+      b.textContent = txt;
+      b.setAttribute('aria-label', cls === 'prev' ? 'Previous' : 'Next');
+      b.addEventListener('click', fn);
+      stage.appendChild(b);
+    };
+    mkBtn('prev', '‹', () => go(idx - 1));
+    mkBtn('next', '›', () => go(idx + 1));
+
+    let idx = 0;
+
+    function go(n) {
+      const sl = stage.querySelectorAll('.slide');
+      const tb = thumbs.querySelectorAll('button');
+
+      // Pause current embed
+      const oldIt = items[idx];
+      if (oldIt[0] === 'a' || oldIt[0] === 'y') {
+        const iframe = sl[idx].querySelector('iframe');
+        if (iframe) iframe.src = '';
+      }
+
+      sl[idx].classList.remove('active');
+      tb[idx].classList.remove('active');
+      idx = (n + N) % N;
+      sl[idx].classList.add('active');
+      tb[idx].classList.add('active');
+
+      const newIt = items[idx];
+      if (newIt[0] === 'a' || newIt[0] === 'y') injectEmbed(sl[idx], newIt);
+
+      curEl.textContent = String(idx + 1).padStart(2, '0');
+      tb[idx].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    }
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight') go(idx + 1);
+      if (e.key === 'ArrowLeft')  go(idx - 1);
     });
   </script>
 

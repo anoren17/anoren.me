@@ -746,73 +746,89 @@ a { color: inherit; text-decoration: none; }
 }
 
 /* =========================================================
-   MUSIC — feed of embeds + notes
+   MUSIC — carousel overrides + slide types
    ========================================================= */
-.feed {
-  max-width: 720px;
-  margin: clamp(34px, 6vw, 56px) auto 0;
+.music-carousel .stage {
+  aspect-ratio: unset;
+  min-height: 460px;
+  max-height: min(660px, 82vh);
+}
+.music-carousel .stage .slide {
   display: flex;
+  align-items: center;
+  justify-content: center;
   flex-direction: column;
-  gap: clamp(22px, 3vw, 32px);
+  padding: 28px clamp(14px, 4vw, 48px);
+  box-sizing: border-box;
 }
-.f-label {
-  font-family: var(--mono);
-  font-size: 0.66rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--ink-soft);
-  margin: 0 2px 9px;
-  display: block;
-}
-.f-embed {
-  position: relative;
+.sl-embed-wrap {
+  width: 100%;
   border: 1px solid var(--line);
   border-radius: 12px;
   overflow: hidden;
   background: #fff;
 }
-.f-embed iframe { display: block; width: 100%; border: 0; }
-.f-yt { aspect-ratio: 16 / 9; background: #000; }
-.f-yt iframe { position: absolute; inset: 0; width: 100%; height: 100%; }
-
-.f-note {
-  text-align: center;
-  padding: clamp(6px, 1.5vw, 12px) 0;
+.sl-yt {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  background: #000;
 }
-.f-note .d {
+.sl-yt iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.slide-note { gap: 16px; text-align: center; }
+.sn-date {
   font-family: var(--mono);
-  font-size: 0.8rem;
+  font-size: 0.82rem;
   letter-spacing: 0.05em;
   color: var(--accent);
 }
-.f-note .t {
+.sn-text {
   font-family: var(--display);
   font-style: italic;
   font-weight: 400;
-  font-size: clamp(1.1rem, 2.6vw, 1.45rem);
+  font-size: clamp(1.2rem, 3.2vw, 2rem);
   line-height: 1.25;
-  color: var(--ink);
-  margin-top: 5px;
+  max-width: 640px;
 }
-.f-heading {
+.slide-heading { text-align: center; }
+.sh-text {
   font-family: var(--display);
   font-weight: 600;
-  font-size: clamp(1.5rem, 4.4vw, 2.4rem);
+  font-size: clamp(1.8rem, 5vw, 3.2rem);
   letter-spacing: -0.02em;
   line-height: 1.05;
-  text-align: center;
-  margin: clamp(22px, 4vw, 40px) 0 4px;
 }
-.f-heading em { font-style: italic; font-weight: 400; color: var(--accent); }
-.f-link {
-  display: inline-block;
+.sh-text em { font-style: italic; font-weight: 400; color: var(--accent); }
+
+/* Music text thumbnails */
+.music-thumbs button {
+  width: 130px;
+  height: 60px;
+  padding: 7px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 3px;
+  overflow: hidden;
+}
+.th-src {
   font-family: var(--mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.05em;
-  border-bottom: 1.5px solid var(--accent);
-  padding-bottom: 2px;
-  margin-top: 8px;
-  color: var(--ink);
-  transition: color 0.2s;
+  font-size: 0.56rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-soft);
+  line-height: 1;
+  flex-shrink: 0;
 }
-.f-link:hover { color: var(--accent); }
+.th-note { opacity: 0.7; }
+.th-head { color: var(--accent-2); }
+.th-ttl {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  color: var(--ink);
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}

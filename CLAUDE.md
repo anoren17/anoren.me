@@ -3,6 +3,16 @@
 Personal static site for Anor. Minimal, editorial design. Four pages: Home (socials only),
 Cooking (photo carousel), Music (embeds + notes), Poker (placeholder). **No crypto page.**
 
+## ⚠️ Content & voice rule (read before writing any copy)
+- **Never invent taglines, descriptions, or first-person ("I…") copy.** All text that speaks
+  in Anor's voice must be Anor's own words. Do not write things like "A small corner of the
+  internet for the things I make and love."
+- Keep the site **minimal** — prefer no descriptive prose over filler.
+- **Always confirm any user-facing content/text with Anor before publishing it.** Structural
+  labels (nav, section numbers, headings he's approved) are fine; personal-voice sentences are not.
+- Approved so far: headlines "Cooking", "Music", "Shuffling up" (poker). Music sub-line
+  "The songs I can't stop playing." is approved.
+
 ## How it's wired up
 
 | Layer | Detail |

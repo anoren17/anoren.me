@@ -17,6 +17,7 @@ Poker (live WSOP results — earnings hero + ledger). **No crypto page.**
 - Still UNCONFIRMED (his call): footer right-side microcopy was removed at his request —
   footers now show only `anoren.me`. The home eyebrow "Personal — est. 2026" and the cooking
   sub-line are still my wording; confirm or replace if he objects.
+- **Approved tagline** on home page (Anor's own words): "Nothing is true, Everything is permitted. 🗡️"
 
 ## How it's wired up
 
@@ -25,7 +26,7 @@ Poker (live WSOP results — earnings hero + ledger). **No crypto page.**
 | **Source** | This directory. Plain static HTML/CSS/JS — no build step, no framework. |
 | **Host** | GitHub Pages, repo `anoren17/anoren.me`, branch `main`, folder `/` (root). |
 | **GitHub Pages URL** | https://anoren17.github.io/anoren.me/ |
-| **Live URL** | https://anoren.me (custom domain, HTTPS enforced) |
+| **Live URL** | https://anoren.me (custom domain, HTTPS enforced — cert covers anoren.me + www, expires 2026-09-11) |
 | **Git remote** | `git@github.com:anoren17/anoren.me.git` (SSH — HTTPS push fails in this env) |
 | **Registrar** | Tucows (formerly Google Domains; domain now managed at domains.squarespace.com) |
 | **Design preview** | claude.ai/design project `9b50760f-e4c3-4711-abef-c0757d2154d5` (synced via DesignSync) |
@@ -103,3 +104,6 @@ Next: get Anor's words for the home eyebrow + cooking sub-line if he wants them 
 
 **Session note (2026-06-13 continued):** Added field sizes + top-% to all poker results; removed 6 dead
 music embeds; converted music feed to carousel (matching cooking). Next: none — site is in good shape.
+
+**Session note (2026-06-13 final):** Fixed HTTPS (cycled CNAME to trigger Let's Encrypt provisioning,
+enforced via API); added home tagline. Site is fully live and secure at https://anoren.me.

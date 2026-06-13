@@ -1,7 +1,8 @@
 # anoren.me — Personal Website
 
 Personal static site for Anor. Minimal, editorial design. Four pages: Home (socials only),
-Cooking (photo carousel), Music (embeds + notes), Poker (placeholder). **No crypto page.**
+Cooking (41-photo carousel), Music (feed of Amazon Music + YouTube embeds with dated notes),
+Poker (live WSOP results — earnings hero + ledger). **No crypto page.**
 
 ## ⚠️ Content & voice rule (read before writing any copy)
 - **Never invent taglines, descriptions, or first-person ("I…") copy.** All text that speaks
@@ -10,8 +11,12 @@ Cooking (photo carousel), Music (embeds + notes), Poker (placeholder). **No cryp
 - Keep the site **minimal** — prefer no descriptive prose over filler.
 - **Always confirm any user-facing content/text with Anor before publishing it.** Structural
   labels (nav, section numbers, headings he's approved) are fine; personal-voice sentences are not.
-- Approved so far: headlines "Cooking", "Music", "Shuffling up" (poker). Music sub-line
-  "The songs I can't stop playing." is approved.
+- Approved so far: headlines "Cooking", "Music", "Poker". Music sub-line
+  "The songs I can't stop playing." is approved. Poker eyebrow "Live tournament results" and
+  the dated music notes (Anor's own words) are approved.
+- Still UNCONFIRMED (his call): footer right-side microcopy was removed at his request —
+  footers now show only `anoren.me`. The home eyebrow "Personal — est. 2026" and the cooking
+  sub-line are still my wording; confirm or replace if he objects.
 
 ## How it's wired up
 
@@ -47,8 +52,8 @@ The `CNAME` file in this repo root holds `anoren.me` and must stay — it tells 
 ```
 index.html        Home — wordmark, social links, contents index
 cooking.html      41-photo auto-advancing carousel (JS-driven from assets/cooking/)
-music.html        YouTube embeds + listening log + personal note
-poker.html        Elegant "coming soon" placeholder
+music.html        Feed of ~26 Amazon Music + ~9 YouTube embeds + dated notes (JS `items` array)
+poker.html        WSOP results — giant earnings hero + suit-marked results ledger
 styles.css        Shared stylesheet (Fraunces / Space Mono / Inter; persimmon accent)
 assets/cooking/   img-01.jpg … img-41.jpg (downloaded from the old Google Sites page)
 CNAME             Custom-domain marker for GitHub Pages
@@ -69,10 +74,26 @@ CNAME             Custom-domain marker for GitHub Pages
 ### Common edits
 - **Socials** → `index.html`, the `.socials` block (handles live in the link text).
 - **More cooking photos** → drop files in `assets/cooking/`, bump `const N` in `cooking.html`.
-- **Music** → add another `<article class="track">` with a YouTube `/embed/<id>` iframe.
-- **Poker** → replace the `.coming` section in `poker.html` with real results when ready.
+- **Music** → add a row to the `items` array in `music.html`: `['a', ASIN, id, height]` for
+  Amazon Music, `['y', videoId, 'Title']` for YouTube, `['n', date, text]` for a note,
+  `['h', 'Heading']` for a section heading.
+- **Poker** → edit the `items` rows in the `.ledger` / `.eh-substats` in `poker.html`; mark the
+  best cash with `class="result best"`. Source: The Hendon Mob player n=960137 (name withheld
+  on the page). Current: 5 cashes, $16,800, best 32nd ($1,500 Shootout).
 
 ## Migration note
 This replaced a Google Sites site (sites.google.com). Old pages: Home, Cooking Pan, Music,
 Crypto Portfolio. Content (socials, cooking photos, music links, listening log) was carried
 over; the Crypto Portfolio page was intentionally dropped and a Poker page added.
+
+The old Google Site is Drive file `1n4vwoxD6vCf305v8cdR4BHkHOxiZ8TTw` (page
+`1e5U0QPBvbLD-D12EJT_3mu4Fxl6ZRUy-`). It is **not scrapable** — the editor/preview URLs require
+Anor's Google login and Sites content can't be exported via the Drive API. To recover anything
+else from it, have Anor paste the page's raw HTML (that's how the music embeds were recovered).
+
+---
+**Session note (2026-06-13):** Built the whole site from scratch (4 pages + 41 cooking images),
+deployed to GitHub Pages on anoren.me, synced to claude.ai/design; added real poker results,
+rebuilt music with all ~35 embeds, and stripped invented copy per the content/voice rule.
+Next: get Anor's words for the home eyebrow + cooking sub-line if he wants them changed, and
+real "best finish of N" field sizes for the poker ledger.

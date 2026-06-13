@@ -29,69 +29,104 @@
       <p class="sub rise d2">The songs I can't stop playing.</p>
     </section>
 
-    <section class="tracks rise d3">
-
-      <article class="track">
-        <div class="embed">
-          <iframe src="https://www.youtube.com/embed/IkcUlmHk73o" title="Shu Amin illi Shu" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        </div>
-        <div class="info">
-          <span class="meta-num">Track 01</span>
-          <h3>Shu Amin illi Shu [Fi-Ha]</h3>
-          <span class="tag">Arabic Remix · Bass Boosted</span><br>
-          <a class="listen" href="https://music.youtube.com/watch?v=IkcUlmHk73o" target="_blank" rel="noopener">Listen on YouTube Music ↗</a>
-        </div>
-      </article>
-
-      <article class="track">
-        <div class="embed">
-          <iframe src="https://www.youtube.com/embed/0HL-N9oOjcs" title="Evolution of Petrunko" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        </div>
-        <div class="info">
-          <span class="meta-num">Track 02</span>
-          <h3>Evolution of Petrunko</h3>
-          <span class="tag">remix by FanEOne</span><br>
-          <a class="listen" href="https://www.youtube.com/watch?v=0HL-N9oOjcs" target="_blank" rel="noopener">Watch on YouTube ↗</a>
-        </div>
-      </article>
-
-      <article class="track">
-        <div class="embed" style="display:grid;place-items:center;background:var(--paper-2);color:var(--ink-soft);font-family:var(--mono);font-size:.8rem;letter-spacing:.06em;text-transform:uppercase;">
-          ♪ &nbsp;Respiration
-        </div>
-        <div class="info">
-          <span class="meta-num">Track 03</span>
-          <h3>Respiration</h3>
-          <span class="tag">My top repeat these days</span><br>
-          <span class="listen" style="border:none;color:var(--ink-soft);">No link — just on loop in my head.</span>
-        </div>
-      </article>
-
-    </section>
-
-    <section class="log rise d4">
-      <h2>Listening log</h2>
-      <p class="log-sub">Dated entries · most recent first</p>
-      <div class="log-list">
-        <div class="log-row"><span class="date">5/17</span><span class="what">Back on the Arabic remix.</span></div>
-        <div class="log-row"><span class="date">2/22</span><span class="what">Repeat. Repeat. Repeat.</span></div>
-        <div class="log-row"><span class="date">1/29</span><span class="what">Still here.</span></div>
-        <div class="log-row"><span class="date">1/27</span><span class="what">On loop.</span></div>
-        <div class="log-row"><span class="date">1/11</span><span class="what">New year, same song.</span></div>
-        <div class="log-row"><span class="date">11/26</span><span class="what">Quiet night.</span></div>
-        <div class="log-row"><span class="date">10/26</span><span class="what">One hell of a day — stress and high cortisol. Blood's not thicker than water after all.</span></div>
-        <div class="log-row"><span class="date">10/22</span><span class="what">Respiration — top repeat song these days.</span></div>
-        <div class="log-row"><span class="date">10/19</span><span class="what">Late.</span></div>
-        <div class="log-row"><span class="date">10/18</span><span class="what">Again.</span></div>
-        <div class="log-row"><span class="date">10/8</span><span class="what">Evolution of Petrunko — on repeat.</span></div>
-      </div>
-    </section>
+    <section class="feed rise d3" id="feed"></section>
 
   </main>
 
   <footer class="footer">
     <span>anoren.me</span>
   </footer>
+
+  <script>
+    // Every shared link from the original site, in order.
+    // a = Amazon Music [asin, id, height]; y = YouTube [videoId, title];
+    // n = note [date, text]; h = heading; l = link [url, label, videoId]
+    const items = [
+      ['a', 'B01N6J9HCO', '7gZBEe5QaF', 352],
+      ['a', 'B0B5FN3DBZ', 'jHeOYWRPvj', 390],
+      ['y', 'oRZ0cfZ9SeU', 'Vilen — Ek Raat'],
+      ['a', 'B0CDN9KQKN', 'ldsHJiXKZk', 390],
+      ['a', 'B094MQK737', '5H4tipmXvo', 390],
+      ['a', 'B0C4VS3CC1', 'MBaohlx25C', 390],
+      ['a', 'B09VQ6BR7K', '7Z5zFCO2aG', 390],
+      ['a', 'B07X83TF2P', 'GInRR19YJd', 390],
+      ['a', 'B0C6QXZYLN', '6RLkgawthD', 390],
+      ['a', 'B0B7B1RRLM', 'AIKngnm9yP', 390],
+      ['a', 'B074QFMHBY', 'XdwDycClsy', 390],
+      ['a', 'B09V6DP45M', 'WjG2QlesYQ', 390],
+      ['a', 'B000WLMMBW', '3qctVWmDTv', 390],
+      ['a', 'B002EHTTHW', 'gTva9E4JBY', 390],
+      ['y', 'IkcUlmHk73o', 'Shu Amin illi Shu [Fi-Ha] — Arabic Remix (Bass Boosted)'],
+      ['a', 'B002A5ZD96', 'Fop6qulavJ', 390],
+      ['a', 'B001NZXFFI', 'AvF3BH4tT6', 390],
+      ['n', '5/17', ''],
+      ['a', 'B0B5LBDK7R', 'DhWzxtrLec', 390],
+      ['n', '2/22', ''],
+      ['a', 'B096LFPB89', '9V4ho6MjHO', 390],
+      ['n', '1/29', ''],
+      ['a', 'B0BKYYFCFR', 'JfX392Yvp5', 390],
+      ['n', '1/27', ''],
+      ['a', 'B01MSIOX2M', 'feVjg394T3', 390],
+      ['n', '1/11', 'Gonna be on repeat next few days'],
+      ['y', 'vSINZsLxs8k', 'Sickick — Infected'],
+      ['a', 'B0791J764L', 'nQDwW3ERzG', 390],
+      ['a', 'B0BHTGLFBQ', '2pQTjCVt5G', 390],
+      ['n', '11/26', 'On repeat today ¯\\_(ツ)_/¯. One hell of a day, full of stress and high levels of cortisol.'],
+      ['a', 'B0758XZ5XG', '0znkbFgYTB', 390],
+      ['a', 'B09NLD8Q9D', 'NEfjMIgSSC', 390],
+      ['a', 'B095F7BRBJ', 'ggMoFuL6Hm', 390],
+      ['n', '', "But blood's not thicker than water after all"],
+      ['a', 'B01BM5MW2K', 'BlzTWR3Vku', 600],
+      ['a', 'B09SJSVZS7', 'CWWuS0lmwm', 600],
+      ['n', '10/22', 'Respiration is my top repeat song these days.'],
+      ['h', 'Evolution of <em>Petrunko</em>'],
+      ['y', 'Skhaf0yQrQc', 'The Great Voices of Bulgaria — Bre Petrunko'],
+      ['y', 'dD4oeEvL_sw', 'Petrunko Remix by FanEOne (Bass Boosted)'],
+      ['y', 'vS3KVq_xjMo', 'Petrunko Remix by FanEOne — Rolls Royce'],
+      ['y', '0HL-N9oOjcs', 'Evolution of Petrunko (English version)'],
+      ['y', 'pF1pKFiGXYw', "t.A.T.u. — Ne Ver', Ne Boysya, Ne Prosi"],
+      ['n', '10/8', 'On repeat'],
+      ['y', 'YLHpvjrFpe0', 'Linkin Park — From the Inside'],
+      ['n', '10/18', ''],
+      ['y', 'Z0z9BawyNLQ', 'Dido — White Flag'],
+      ['n', '10/19', '']
+    ];
+
+    const feed = document.getElementById('feed');
+    const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+    items.forEach(it => {
+      const el = document.createElement('div');
+      const type = it[0];
+
+      if (type === 'a') {
+        const [, asin, id, h] = it;
+        el.className = 'feed-item';
+        el.innerHTML =
+          '<span class="f-label">Amazon Music</span>' +
+          '<div class="f-embed"><iframe loading="lazy" height="' + h + '" ' +
+          'src="https://music.amazon.com/embed/' + asin +
+          '/?id=' + id + '&marketplaceId=ATVPDKIKX0DER&musicTerritory=US"></iframe></div>';
+      } else if (type === 'y') {
+        const [, vid, title] = it;
+        el.className = 'feed-item';
+        el.innerHTML =
+          '<span class="f-label">YouTube · ' + esc(title) + '</span>' +
+          '<div class="f-embed f-yt"><iframe loading="lazy" src="https://www.youtube.com/embed/' + vid +
+          '" title="' + esc(title) + '" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>';
+      } else if (type === 'n') {
+        const [, date, text] = it;
+        el.className = 'feed-item f-note';
+        el.innerHTML =
+          (date ? '<span class="d">' + esc(date) + '</span>' : '') +
+          (text ? '<div class="t">' + esc(text) + '</div>' : '');
+      } else if (type === 'h') {
+        el.className = 'f-heading';
+        el.innerHTML = it[1];
+      }
+      feed.appendChild(el);
+    });
+  </script>
 
 </body>
 </html>

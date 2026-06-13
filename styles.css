@@ -743,3 +743,75 @@ a { color: inherit; text-decoration: none; }
   .result:hover { padding-left: 10px; }
   .r-stats { justify-content: flex-start; gap: 28px; }
 }
+
+/* =========================================================
+   MUSIC — feed of embeds + notes
+   ========================================================= */
+.feed {
+  max-width: 720px;
+  margin: clamp(34px, 6vw, 56px) auto 0;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(22px, 3vw, 32px);
+}
+.f-label {
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-soft);
+  margin: 0 2px 9px;
+  display: block;
+}
+.f-embed {
+  position: relative;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fff;
+}
+.f-embed iframe { display: block; width: 100%; border: 0; }
+.f-yt { aspect-ratio: 16 / 9; background: #000; }
+.f-yt iframe { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+.f-note {
+  text-align: center;
+  padding: clamp(6px, 1.5vw, 12px) 0;
+}
+.f-note .d {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+  color: var(--accent);
+}
+.f-note .t {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(1.1rem, 2.6vw, 1.45rem);
+  line-height: 1.25;
+  color: var(--ink);
+  margin-top: 5px;
+}
+.f-heading {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: clamp(1.5rem, 4.4vw, 2.4rem);
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  text-align: center;
+  margin: clamp(22px, 4vw, 40px) 0 4px;
+}
+.f-heading em { font-style: italic; font-weight: 400; color: var(--accent); }
+.f-link {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+  border-bottom: 1.5px solid var(--accent);
+  padding-bottom: 2px;
+  margin-top: 8px;
+  color: var(--ink);
+  transition: color 0.2s;
+}
+.f-link:hover { color: var(--accent); }

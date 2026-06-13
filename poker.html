@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Poker — Anoren</title>
-  <meta name="description" content="Results coming soon." />
+  <meta name="description" content="Live tournament results." />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext y='26' font-size='26'%3E%E2%99%A0%EF%B8%8F%3C/text%3E%3C/svg%3E" />
   <link rel="stylesheet" href="styles.css" />
 </head>
@@ -22,12 +22,80 @@
   </header>
 
   <main class="shell">
-    <section class="coming">
-      <div class="suits rise d1">
-        <span>♠</span><span class="red">♥</span><span>♣</span><span class="red">♦</span>
-      </div>
-      <h2 class="soon rise d2">Shuffling <em>up</em>.</h2>
+
+    <section class="page-head">
+      <p class="eyebrow rise d1">Live tournament results</p>
+      <h1 class="rise d1">Pok<em>er</em></h1>
     </section>
+
+    <section class="stats-strip rise d2">
+      <div class="stat-cell"><div class="v">5</div><div class="k">Cashes</div></div>
+      <div class="stat-cell"><div class="v"><span class="cur">$</span>16,800</div><div class="k">Live earnings</div></div>
+      <div class="stat-cell"><div class="v">32<sup>nd</sup></div><div class="k">Best finish</div></div>
+      <div class="stat-cell"><div class="v"><span class="cur">$</span>5,360</div><div class="k">Best cash</div></div>
+    </section>
+
+    <section class="results-wrap rise d3">
+      <table class="results">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Event</th>
+            <th class="ta-c">Place</th>
+            <th class="ta-r">Prize</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="date" data-label="Date">29 Jun 2025</td>
+            <td class="event" data-label="Event">
+              <span class="event-name">$1,000 NLH — Mini Main Event</span>
+              <span class="event-sub">Bracelet Event #75 · WSOP 2025 · Las Vegas</span>
+            </td>
+            <td class="place ta-c" data-label="Place">511<sup>th</sup></td>
+            <td class="prize ta-r" data-label="Prize">$3,360</td>
+          </tr>
+          <tr>
+            <td class="date" data-label="Date">18 Jun 2025</td>
+            <td class="event" data-label="Event">
+              <span class="event-name">$1,500 NLH — Millionaire Maker</span>
+              <span class="event-sub">Bracelet Event #53 · WSOP 2025 · Las Vegas</span>
+            </td>
+            <td class="place ta-c" data-label="Place">668<sup>th</sup></td>
+            <td class="prize ta-r" data-label="Prize">$3,990</td>
+          </tr>
+          <tr>
+            <td class="date" data-label="Date">04 Jun 2025</td>
+            <td class="event" data-label="Event">
+              <span class="event-name">$500 NLH — Colossus</span>
+              <span class="event-sub">Bracelet Event #19 · WSOP 2025 · Las Vegas</span>
+            </td>
+            <td class="place ta-c" data-label="Place">1,516<sup>th</sup></td>
+            <td class="prize ta-r" data-label="Prize">$1,090</td>
+          </tr>
+          <tr class="best">
+            <td class="date" data-label="Date">04 Jun 2025</td>
+            <td class="event" data-label="Event">
+              <span class="event-name">$1,500 NLH — Shootout <span class="best-tag">Best</span></span>
+              <span class="event-sub">Bracelet Event #20 · WSOP 2025 · Las Vegas</span>
+            </td>
+            <td class="place ta-c" data-label="Place">32<sup>nd</sup></td>
+            <td class="prize ta-r" data-label="Prize">$5,360</td>
+          </tr>
+          <tr>
+            <td class="date" data-label="Date">17 Jun 2022</td>
+            <td class="event" data-label="Event">
+              <span class="event-name">$1,500 NLH — Millionaire Maker</span>
+              <span class="event-sub">Event #37 · WSOP 2022 · Las Vegas</span>
+            </td>
+            <td class="place ta-c" data-label="Place">775<sup>th</sup></td>
+            <td class="prize ta-r" data-label="Prize">$3,000</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="source-note">Source — The Hendon Mob</p>
+    </section>
+
   </main>
 
   <footer class="footer">

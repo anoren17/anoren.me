@@ -1,0 +1,162 @@
+<!-- @dsCard group="Pages" name="Cooking" -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cooking — Anoren</title>
+  <meta name="description" content="Plates from the pan." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext y='26' font-size='26'%3E%F0%9F%8D%B3%3C/text%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <header class="nav">
+    <a class="wordmark" href="index.html">Anoren<span class="dot">.</span></a>
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="cooking.html" aria-current="page">Cooking</a>
+      <a href="music.html">Music</a>
+      <a href="poker.html">Poker</a>
+    </nav>
+  </header>
+
+  <main class="shell">
+
+    <section class="page-head">
+      <p class="eyebrow rise d1">01 — From the pan</p>
+      <h1 class="rise d1">Cook<em>ing</em></h1>
+      <p class="sub rise d2">Everything I've plated, in one place. No recipes, just the results.</p>
+    </section>
+
+    <section class="carousel rise d3">
+      <div class="stage" id="stage" aria-roledescription="carousel"></div>
+
+      <div class="progress"><i id="bar"></i></div>
+
+      <div class="car-controls">
+        <span class="car-counter"><b id="cur">01</b> / <span id="total">41</span></span>
+        <button class="car-toggle" id="toggle">⏸ Pause</button>
+      </div>
+
+      <div class="thumbs" id="thumbs"></div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <span>anoren.me</span>
+    <span>41 plates &amp; counting</span>
+  </footer>
+
+  <script>
+    // 41 downloaded plates, hosted locally.
+    const N = 41;
+    const imgs = Array.from({length: N}, (_, i) =>
+      `assets/cooking/img-${String(i + 1).padStart(2, '0')}.jpg`);
+
+    const stage  = document.getElementById('stage');
+    const thumbs = document.getElementById('thumbs');
+    const curEl  = document.getElementById('cur');
+    const totEl  = document.getElementById('total');
+    const bar    = document.getElementById('bar');
+    const toggle = document.getElementById('toggle');
+
+    totEl.textContent = String(N).padStart(2, '0');
+
+    // build slides + thumbs
+    imgs.forEach((src, i) => {
+      const slide = document.createElement('div');
+      slide.className = 'slide' + (i === 0 ? ' active' : '');
+      const img = document.createElement('img');
+      img.loading = i < 2 ? 'eager' : 'lazy';
+      img.src = src;
+      img.alt = `Plate ${i + 1}`;
+      slide.appendChild(img);
+      if (i === 0) {
+        const lbl = document.createElement('div');
+        lbl.className = 'frame-label';
+        lbl.id = 'frameLabel';
+        lbl.textContent = `Plate No. ${String(i + 1).padStart(2, '0')}`;
+        slide.appendChild(lbl);
+      }
+      stage.appendChild(slide);
+
+      const t = document.createElement('button');
+      t.className = 'thumb' + (i === 0 ? ' active' : '');
+      if (i === 0) t.classList.add('active');
+      const ti = document.createElement('img');
+      ti.loading = 'lazy';
+      ti.src = src;
+      ti.alt = '';
+      t.appendChild(ti);
+      t.addEventListener('click', () => go(i, true));
+      thumbs.appendChild(t);
+    });
+
+    // nav arrows
+    const mkBtn = (cls, txt, fn) => {
+      const b = document.createElement('button');
+      b.className = 'car-btn ' + cls;
+      b.textContent = txt;
+      b.setAttribute('aria-label', cls === 'prev' ? 'Previous' : 'Next');
+      b.addEventListener('click', fn);
+      stage.appendChild(b);
+    };
+    mkBtn('prev', '‹', () => go(idx - 1, true));
+    mkBtn('next', '›', () => go(idx + 1, true));
+
+    const slides = () => stage.querySelectorAll('.slide');
+    const tbtns  = () => thumbs.querySelectorAll('.thumb');
+
+    let idx = 0;
+    let playing = true;
+    let elapsed = 0;
+    const HOLD = 4200;     // ms per slide
+    const TICK = 40;
+
+    function go(n, manual) {
+      const sl = slides(), tb = tbtns();
+      sl[idx].classList.remove('active');
+      tb[idx].classList.remove('active');
+      idx = (n + N) % N;
+      sl[idx].classList.add('active');
+      tb[idx].classList.add('active');
+      curEl.textContent = String(idx + 1).padStart(2, '0');
+      // move (or create) the frame label on the active slide
+      let lbl = document.getElementById('frameLabel');
+      if (lbl) lbl.remove();
+      lbl = document.createElement('div');
+      lbl.className = 'frame-label';
+      lbl.id = 'frameLabel';
+      lbl.textContent = `Plate No. ${String(idx + 1).padStart(2, '0')}`;
+      sl[idx].appendChild(lbl);
+      // keep active thumb in view
+      tb[idx].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+      elapsed = 0;
+      if (manual && playing) { /* reset timer only */ }
+    }
+
+    // autoplay
+    setInterval(() => {
+      if (!playing) return;
+      elapsed += TICK;
+      bar.style.width = Math.min(100, (elapsed / HOLD) * 100) + '%';
+      if (elapsed >= HOLD) { bar.style.width = '0%'; go(idx + 1, false); }
+    }, TICK);
+
+    toggle.addEventListener('click', () => {
+      playing = !playing;
+      toggle.textContent = playing ? '⏸ Pause' : '▶ Play';
+      if (playing) elapsed = 0;
+    });
+
+    // keyboard
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') go(idx + 1, true);
+      if (e.key === 'ArrowLeft')  go(idx - 1, true);
+    });
+  </script>
+
+</body>
+</html>

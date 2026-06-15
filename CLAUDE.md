@@ -107,3 +107,5 @@ music embeds; converted music feed to carousel (matching cooking). Next: none â€
 
 **Session note (2026-06-13 final):** Fixed HTTPS (cycled CNAME to trigger Let's Encrypt provisioning,
 enforced via API); added home tagline. Site is fully live and secure at https://anoren.me.
+
+**Session note (2026-06-14):** Fixed music page iframe/link interactivity â€” invisible inactive slides (`position:absolute;inset:0;opacity:0`) were blocking pointer events on the active slide's iframes. Fix: `pointer-events:none` on inactive slides, `pointer-events:auto` on active. No open TODOs.

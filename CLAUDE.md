@@ -82,9 +82,12 @@ CNAME             Custom-domain marker for GitHub Pages
   B0CDN9KQKN, B0C4VS3CC1, B09VQ6BR7K, B0C6QXZYLN (no longer in Amazon catalog — do not re-add).
 - **Poker** → edit the `.result` rows in the `.ledger` and the `.eh-substats` in `poker.html`; mark the
   best cash with `class="result best"`. Each `.r-place` now includes field size and top-% via
-  `<span class="r-entries"> / N,NNN (X.X%)</span>`. Source: The Hendon Mob player n=960137 (name withheld).
-  Current: 5 cashes, $16,800, best 32nd / 1,299 (2.5%) in $1,500 Shootout. Poker page stays as a ledger
-  (not a carousel) — 5 rows is the right format.
+  `<span class="r-entries"> / N,NNN (X.X%)</span>`. Source: The Hendon Mob player n=570847 (name
+  withheld; the old n=960137 URL now redirects here — use n=570847 going forward). Hendon Mob's
+  Cloudflare check blocks WebFetch — pull results via claude-in-chrome browser tools instead.
+  Page is WSOP-only by design (a 2017 WPT India cash exists on Hendon Mob but is deliberately
+  excluded — confirmed with Anor 2026-08-27). Current: 7 cashes, $19,972, best 32nd / 1,299 (2.5%)
+  in $1,500 Shootout. Poker page stays as a ledger (not a carousel) — 7 rows is the right format.
 
 ## Migration note
 This replaced a Google Sites site (sites.google.com). Old pages: Home, Cooking Pan, Music,
@@ -109,3 +112,5 @@ music embeds; converted music feed to carousel (matching cooking). Next: none �
 enforced via API); added home tagline. Site is fully live and secure at https://anoren.me.
 
 **Session note (2026-06-14):** Fixed music page iframe/link interactivity — invisible inactive slides (`position:absolute;inset:0;opacity:0`) were blocking pointer events on the active slide's iframes. Fix: `pointer-events:none` on inactive slides, `pointer-events:auto` on active. No open TODOs.
+
+**Session note (2026-08-27):** Synced 2 new WSOP 2026 cashes from Hendon Mob (pulled via browser tools since Hendon Mob blocks WebFetch); confirmed with Anor to keep the poker page WSOP-only rather than backfill an older non-WSOP cash. No open TODOs.

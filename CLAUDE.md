@@ -69,6 +69,10 @@ public/CNAME            .github/workflows/deploy.yml (build + deploy to Pages)
   glows are static blurred copies, never a filter on something animating; endless loops are transform-only
   and pause off-screen; pointer effects run only while the pointer moves; nothing else loops; no canvas/WebGL
   loops; `prefers-reduced-motion` switches all motion off. Re-measure after adding effects.
+- **Traps (both caused real bugs):** the hero and page-title lettering have padded, invisible boxes (room for the
+  glow and write-on mask), so they are `pointer-events:none` and `.nav` sits at `z-index:2` — keep it that way or
+  nav links stop clicking. The `@view-transition` opt-in is inlined first in `Base.astro` *and* kept in `site.css`;
+  with only the stylesheet copy, most page changes silently skipped the morph.
 
 ## Hosting
 | | |
@@ -80,8 +84,10 @@ public/CNAME            .github/workflows/deploy.yml (build + deploy to Pages)
 
 `gh` is authenticated: `gh api repos/anoren17/anoren.me/pages` (status), `gh run watch` (deploys),
 `gh api repos/anoren17/anoren.me/pages --method PUT --field cname=anoren.me` (re-set domain).
-To publish: `git pull origin main`, edit, `npm run build && npm run check`, commit, push — only when Anor says so.
-The claude.ai/design preview project (`9b50760f-…`) was synced from the old hand-written HTML and is stale.
+To publish: `git pull origin main`, edit, `npm run build && npm run check`, check in the browser (`npm run preview`)
+that links click, page morphs run and nothing scrolls sideways at 320px, commit, push — only when Anor says so.
+**Open:** only tested in Chrome — not yet Safari, Firefox or a real phone. The claude.ai/design preview project
+(`9b50760f-…`) was synced from the old hand-written HTML and is stale.
 
 ## History
 Replaced a Google Sites site in June 2026 (content carried over; Crypto page dropped, Poker added). The old
@@ -91,4 +97,4 @@ Google Site (Drive file `1n4vwoxD6vCf305v8cdR4BHkHOxiZ8TTw`) is not scrapable �
 
 **Session note (2026-08-27):** Synced 2 new WSOP 2026 cashes; confirmed poker stays WSOP-only.
 
-**Session note (2026-11-09):** Redesigned twice in one day (blue + calligraphy went live, then rejected as "not me"), then migrated to Astro 7 + TypeScript and rebuilt as night/turquoise with Assassin's Creed motifs. Local preview: `npm run preview`; headless-Chrome checks need a real-time session (virtual-time screenshots stall animations).
+**Session note (2026-11-09):** Blue redesign shipped then rejected; migrated to Astro 7 + TypeScript and rebuilt as night/turquoise with Assassin's Creed motifs, then fixed the bugs now listed under Design system → Traps. Headless-Chrome checks need a real-time session (virtual-time screenshots stall animations).

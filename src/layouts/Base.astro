@@ -19,7 +19,12 @@ const { page, title, description, emoji } = Astro.props;
 const icon = 'data:image/svg+xml,' + encodeURIComponent(
   `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><text y="26" font-size="26">${emoji}</text></svg>`,
 );
-const scriptFace = `@font-face{font-family:'Script';src:url(${script.url}) format('woff2');font-display:block}:root{--script-scale:${script.scale}}`;
+// First CSS the browser sees. It must carry the page-transition opt-in: this inline style is parsed before
+// the main stylesheet, and if the opt-in only lived there the browser could decide "no transition" too early
+// (measured: 7 of 12 page changes lost their morph). The same rules are repeated in site.css.
+const firstCss =
+  `@view-transition{navigation:auto}@media (prefers-reduced-motion:reduce){@view-transition{navigation:none}}` +
+  `@font-face{font-family:'Script';src:url(${script.url}) format('woff2');font-display:block}:root{--script-scale:${script.scale}}`;
 const others = [{ key: 'home', href: '/' }, ...nav].filter(p => p.key !== page);
 ---
 <!doctype html>
@@ -32,7 +37,7 @@ const others = [{ key: 'home', href: '/' }, ...nav].filter(p => p.key !== page);
   <link rel="icon" href={icon} />
   <meta name="theme-color" content="#04090D" />
   <link rel="preload" href={script.url} as="font" type="font/woff2" crossorigin />
-  <style set:html={scriptFace}></style>
+  <style set:html={firstCss}></style>
   {others.map(p => <link rel="prefetch" href={p.href} />)}
 
   <script is:inline>

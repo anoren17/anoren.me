@@ -29,6 +29,7 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  overflow-x: clip;     /* the lettering's padded glow box may reach past the edge; never let it add sideways scroll */
 }
 
 a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transparent; }
@@ -58,7 +59,7 @@ img { display: block; max-width: 100%; }
    wordmark ↔ the nav wordmark, each home tile ↔ that page's
    title and main panel, and the active nav pill slides.
    ========================================================= */
-@view-transition { navigation: auto; }
+@view-transition { navigation: auto; }   /* also inlined first in Base.astro — keep both */
 
 ::view-transition-group(*) {
   animation-duration: 0.55s;
@@ -277,9 +278,11 @@ img { display: block; max-width: 100%; }
 .hero h1 {
   font-size: calc(35cqw * var(--script-scale, 1));
   line-height: 0.86;
-  /* generous padding (cancelled by the margins) so the glow fits inside the write-on mask */
-  padding: 0.3em 0.26em 0.26em 0.34em;
-  margin: -0.28em -0.26em -0.24em -0.3em;
+  /* generous padding (cancelled by the margins) so the glow fits inside the write-on mask;
+     on the right it never reaches past the page edge, so it cannot cause sideways scroll */
+  --pr: min(0.26em, var(--pad));
+  padding: 0.3em var(--pr) 0.26em 0.34em;
+  margin: -0.28em calc(var(--pr) * -1) -0.24em -0.3em;
   pointer-events: none;   /* its padded box overlaps neighbours; the pointer effects listen on window instead */
   user-select: none;
   -webkit-user-select: none;
@@ -1079,6 +1082,13 @@ img { display: block; max-width: 100%; }
   .wordmark { font-size: calc(2rem * var(--script-scale, 1)); }
   .nav-links { font-size: 0.9rem; }
   .nav-links a { padding: 7px 11px; }
+}
+
+@media (max-width: 360px) {   /* smallest phones: keep the whole nav on screen */
+  .nav { gap: 8px; }
+  .wordmark { font-size: calc(1.7rem * var(--script-scale, 1)); }
+  .nav-links { gap: 0; font-size: 0.84rem; }
+  .nav-links a { padding: 6px 8px; }
 }
 
 /* =========================================================

@@ -1,0 +1,44 @@
+/* =========================================================
+   anoren.me — design tokens
+   Night ground, electric turquoise ink. Change a value here
+   and the whole site follows.
+   ========================================================= */
+:root {
+  /* ground */
+  --night:     #04090D;   /* page */
+  --night-2:   #0A141A;   /* raised surfaces: panels, playlist */
+  --night-3:   #12212A;   /* chips, buttons, hover */
+  --line:      rgba(170, 235, 228, 0.13);
+
+  /* text */
+  --text:      #E9F4F2;
+  --text-soft: #8DA3A8;
+
+  /* the signature colour */
+  --turq:      #19F0D2;   /* electric turquoise */
+  --turq-deep: #0D9DB3;   /* where the ink pools */
+  --mint:      #D4FFF6;   /* where it catches the light */
+  --ink:       #031014;   /* text on turquoise fills */
+
+  /* the one warm colour — only for hearts and diamonds */
+  --red:       #FF4D5E;
+  --red-deep:  #C9142E;   /* the same, on turquoise or on a white card */
+
+  /* type */
+  --script:  'Script', 'Snell Roundhand', 'Brush Script MT', cursive;   /* 'Script' = active face in src/fonts/script.ts */
+  --display: 'Bricolage Grotesque Variable', 'Onest Variable', system-ui, sans-serif;
+  --body:    'Onest Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --symbol:  'Apple Symbols', 'Segoe UI Symbol', 'Noto Sans Symbols 2', 'DejaVu Sans', serif;
+
+  /* motion */
+  --ease:   cubic-bezier(.2, .8, .2, 1);
+  --spring: cubic-bezier(.3, 1.5, .5, 1);
+  --snap:   cubic-bezier(.1, .9, .2, 1);
+
+  /* layout */
+  --maxw: 1200px;
+  --pad:  clamp(20px, 5vw, 56px);
+  --r-lg: 22px;
+  --r-md: 14px;
+  --r-sm: 8px;
+}

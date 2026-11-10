@@ -1,0 +1,88 @@
+---
+import Base from '../layouts/Base.astro';
+import { socials } from '../data/site';
+import { photos, homePicks } from '../data/cooking';
+import { latestYear } from '../data/poker';
+import { photo } from '../lib/images';
+
+// Cooking tile: the photos it fades through.
+const picks = await Promise.all(homePicks.map(n => photo(photos[n - 1]!)));
+const tileSizes = '(max-width: 720px) 100vw, 56vw';
+
+// Music tile: fixed equalizer shape (height %, animation offset).
+const bars = [34, 52, 71, 46, 88, 63, 40, 76, 95, 58, 37, 66, 82, 49, 29, 61, 90, 73, 44, 56, 79, 35, 64, 48, 70, 31]
+  .map((h, i) => ({ h, d: (i * 137) % 900 }));
+---
+<Base page="home" title="Anoren" description="Anoren — cooking, music, poker." emoji="🔥">
+  <main class="shell">
+
+    <section class="hero">
+      <h1 class="ink" data-text="Anoren">Anoren</h1>
+      <!-- The blade. Original drawing: pommel ring, grip, guard, and a tapered edge that extends once on load. -->
+      <svg class="blade" viewBox="0 0 640 40" aria-hidden="true">
+        <defs>
+          <linearGradient id="steel" x1="0" x2="1">
+            <stop offset="0" stop-color="#0D9DB3" /><stop offset="0.5" stop-color="#19F0D2" /><stop offset="1" stop-color="#D4FFF6" />
+          </linearGradient>
+          <path id="edge" d="M96 12.5 L560 17.6 L640 20 L560 22.4 L96 27.5 Z" />
+          <clipPath id="edge-clip"><use href="#edge" /></clipPath>
+        </defs>
+        <use class="aura" href="#edge" fill="#19F0D2" />
+        <g class="hilt">
+          <circle cx="9" cy="20" r="6" fill="none" stroke="#19F0D2" stroke-width="2.6" />
+          <rect x="17" y="15.4" width="66" height="9.2" rx="4.6" fill="url(#steel)" />
+          <path d="M34 15.4 V24.6 M50 15.4 V24.6 M66 15.4 V24.6" stroke="#04090D" stroke-opacity="0.55" stroke-width="2" />
+          <path d="M90 1 Q99.5 20 90 39 Q84 20 90 1 Z" fill="#19F0D2" />
+        </g>
+        <g class="edge">
+          <use href="#edge" fill="url(#steel)" />
+          <path d="M108 20 H548" stroke="#04090D" stroke-opacity="0.4" stroke-width="1.4" />
+          <g clip-path="url(#edge-clip)"><path class="glint" d="M-70 0 H-10 L-34 40 H-94 Z" fill="#fff" /></g>
+        </g>
+      </svg>
+      <div class="hero-foot">
+        <p class="tagline reveal">
+          <span class="sr-only">Nothing is true, Everything is permitted.</span>
+          <span class="creed" aria-hidden="true">Nothing is true, Everything is permitted.</span>&nbsp;<span class="dagger">🗡️</span>
+        </p>
+        <div class="socials reveal">
+          {socials.map(s => (
+            <a class="social" href={s.href} target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24"><path d={s.icon} /></svg>
+              <span class="name">{s.name}</span> <span class="handle">{s.handle}</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="tiles">
+      <a class="tile tile-cooking reveal" href="/cooking">
+        <span class="tile-media" id="cookTile" data-picks={JSON.stringify(picks)} data-sizes={tileSizes}>
+          <img class="on" src={picks[0]!.src} srcset={picks[0]!.srcset} sizes={tileSizes} alt="" fetchpriority="high" />
+        </span>
+        <span class="tile-title">Cooking</span>
+        <span class="tile-meta">{photos.length} plates</span>
+      </a>
+      <a class="tile tile-music reveal" data-glow href="/music">
+        <span class="bars" aria-hidden="true">
+          {bars.map(b => <i style={`--h:${b.h}%;--d:-${b.d}ms`}></i>)}
+        </span>
+        <span class="tile-title">Music</span>
+        <span class="tile-meta">On repeat</span>
+      </a>
+      <a class="tile tile-poker reveal" data-glow href="/poker">
+        <span class="cards" aria-hidden="true"><i>♠&#xFE0E;</i><i class="red">♥&#xFE0E;</i><i>♣&#xFE0E;</i><i class="red">♦&#xFE0E;</i></span>
+        <span class="tile-title">Poker</span>
+        <span class="tile-meta">WSOP {latestYear}</span>
+      </a>
+    </section>
+
+  </main>
+</Base>
+
+<script>
+  import '../scripts/wordmark';
+  import '../scripts/decode';
+  import '../scripts/tiles';
+</script>

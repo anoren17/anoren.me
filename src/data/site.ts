@@ -1,0 +1,43 @@
+// Navigation and social links. Handles are shown as written here.
+export const nav = [
+  { key: 'cooking', label: 'Cooking', href: '/cooking' },
+  { key: 'music', label: 'Music', href: '/music' },
+  { key: 'poker', label: 'Poker', href: '/poker' },
+] as const;
+
+export type PageKey = 'home' | (typeof nav)[number]['key'];
+
+export interface Social { name: string; handle: string; href: string; /** 24×24 SVG path */ icon: string }
+
+export const socials: Social[] = [
+  {
+    name: "Instagram",
+    handle: "@anoren.t",
+    href: "https://www.instagram.com/anoren.t/",
+    icon: "M12 2.2c3.2 0 3.6 0 4.9.1 3.3.2 4.8 1.7 5 5 .1 1.3.1 1.6.1 4.9s0 3.6-.1 4.9c-.2 3.3-1.7 4.8-5 5-1.3.1-1.6.1-4.9.1s-3.6 0-4.9-.1c-3.3-.2-4.8-1.7-5-5C2 16.6 2 16.3 2 13s0-3.6.1-4.9c.2-3.3 1.7-4.8 5-5C8.4 2.2 8.8 2.2 12 2.2zm0-2.2C8.7 0 8.3 0 7.1.1 2.7.3.3 2.7.1 7.1 0 8.3 0 8.7 0 12s0 3.7.1 4.9C.3 21.3 2.7 23.7 7.1 23.9 8.3 24 8.7 24 12 24s3.7 0 4.9-.1c4.4-.2 6.8-2.6 7-7C24 15.7 24 15.3 24 12s0-3.7-.1-4.9C23.7 2.7 21.3.3 16.9.1 15.7 0 15.3 0 12 0zm0 5.8a6.2 6.2 0 1 0 0 12.4A6.2 6.2 0 0 0 12 5.8zm0 10.2a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.4-11.8a1.4 1.4 0 1 0 0 2.8 1.4 1.4 0 0 0 0-2.8z",
+  },
+  {
+    name: "X",
+    handle: "@AnorTarlangon",
+    href: "https://twitter.com/AnorTarlangon",
+    icon: "M18.2 2h3.4l-7.4 8.5L23 22h-6.8l-5.3-6.9L4.7 22H1.3l7.9-9L1 2h7l4.8 6.3L18.2 2zm-1.2 18h1.9L7.1 4H5.1L17 20z",
+  },
+  {
+    name: "YouTube",
+    handle: "@anoren",
+    href: "https://www.youtube.com/channel/UCpjsHOGnA23WuqzV4dGjmQw",
+    icon: "M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1C24 15.9 24 12 24 12s0-3.9-.5-5.8zM9.7 15.5V8.5l6.3 3.5-6.3 3.5z",
+  },
+  {
+    name: "Facebook",
+    handle: "anorent",
+    href: "https://www.facebook.com/anorent/",
+    icon: "M24 12.1C24 5.4 18.6 0 12 0S0 5.4 0 12.1C0 18.1 4.4 23.1 10.1 24v-8.4H7.1v-3.5h3V9.4c0-3 1.8-4.7 4.5-4.7 1.3 0 2.7.2 2.7.2v3h-1.5c-1.5 0-2 .9-2 1.9v2.3h3.4l-.5 3.5h-2.8V24C19.6 23.1 24 18.1 24 12.1z",
+  },
+  {
+    name: "Snapchat",
+    handle: "anorenvim",
+    href: "https://www.snapchat.com/add/anorenvim",
+    icon: "M12.2.5c2.8 0 5.9 2 6.3 5.9l.1 1.5c.1.3.3.4.5.4.3 0 .7-.1 1-.3h.1c.1 0 .3.1.3.3 0 .5-.7 1-1.4 1.3-.1 0-.1.1-.1.1 0 .6 1.5 3.4 4.3 4 .2 0 .3.2.2.4-.4 1-2.5 1.3-3.4 1.4-.2 0-.3.1-.3.3-.1.4-.4.7-.6.7-.2 0-.3-.1-.6-.2-.6-.3-1.3-.6-2.6-.6-1.2 0-2.2.4-3.1.8-.7.3-1.4.6-2.2.6-.7 0-1.3-.2-1.9-.6-.9-.4-1.9-.8-3.1-.8-1.3 0-2 .3-2.6.6-.3.1-.4.2-.6.2-.2 0-.5-.3-.6-.7-.1-.2-.2-.3-.3-.3C.9 15 -1.2 14.7-1.6 13.7c-.1-.2 0-.4.2-.4 2.8-.6 4.3-3.4 4.3-4 0-.1 0-.1-.1-.1C2 8.9 1.4 8.4 1.4 7.9c0-.2.2-.3.3-.3h.1c.3.2.7.3 1 .3.2 0 .4-.1.5-.4l.1-1.5C3.8 2.5 6.9.5 9.7.5c.7 0 1.7.2 2.5.5z",
+  },
+];

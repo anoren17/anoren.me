@@ -1,0 +1,69 @@
+---
+import Base from '../layouts/Base.astro';
+import { items, embedSrc } from '../data/music';
+
+const pad = (n: number) => String(n).padStart(2, '0');
+// decorative equalizer along the bottom of the stage
+const eq = Array.from({ length: 36 }, (_, i) => ({
+  h: Math.round(30 + 70 * Math.abs(Math.sin(i * 1.7) * Math.cos(i * 0.6))),
+  d: (i * 290) % 1900,
+}));
+---
+<Base page="music" title="Music — Anoren" description="On repeat." emoji="🎧">
+  <main class="shell">
+
+    <header class="page-head">
+      <h1 class="ink" data-text="Music">Music</h1>
+      <p class="sub reveal">The songs I can't stop playing.</p>
+    </header>
+
+    <section class="player">
+      <div class="player-main">
+        <div class="stage" id="stage" aria-roledescription="carousel" aria-label="Music">
+          <div class="stage-bars" aria-hidden="true">
+            {eq.map(b => <i style={`--h:${b.h}%;--d:-${b.d}ms`}></i>)}
+          </div>
+          {items.map(it => (
+            <div
+              class:list={['slide', { 'slide-note': it.kind === 'note', 'slide-heading': it.kind === 'heading' }]}
+              data-kind={it.kind}
+              data-src={embedSrc(it)}
+              data-height={it.kind === 'amazon' ? it.height : undefined}
+              data-title={it.kind === 'amazon' || it.kind === 'youtube' ? it.title : undefined}
+            >
+              {it.kind === 'note' && it.date && <span class="sn-date">{it.date}</span>}
+              {it.kind === 'note' && it.text && <p class="sn-text">{it.text}</p>}
+              {it.kind === 'heading' && <div class="sh-text ink">{it.text}</div>}
+            </div>
+          ))}
+        </div>
+        <div class="car-controls reveal">
+          <button class="car-btn" id="prev" aria-label="Previous">‹</button>
+          <button class="car-btn" id="next" aria-label="Next">›</button>
+          <span class="car-counter"><b id="cur">01</b> / <span>{pad(items.length)}</span></span>
+        </div>
+      </div>
+
+      <div class="playlist-wrap reveal">
+        <ol class="playlist" id="playlist">
+          <li class="pl-pill" role="presentation"><span class="pl-eq"><i></i><i></i><i></i></span></li>
+          {items.map(it => (
+            <li class:list={[{ 'pl-track': it.kind === 'amazon' || it.kind === 'youtube', 'pl-note': it.kind === 'note', 'pl-head': it.kind === 'heading' }]}>
+              <button>
+                {it.kind === 'amazon' && <><span class="pl-kind">♫</span><span class="pl-title">{it.title}</span></>}
+                {it.kind === 'youtube' && <><span class="pl-kind">▶&#xFE0E;</span><span class="pl-title">{it.title}</span></>}
+                {it.kind === 'note' && <><span class="pl-kind">{it.date || '—'}</span><span class="pl-title">{it.text}</span></>}
+                {it.kind === 'heading' && it.text}
+              </button>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+
+  </main>
+</Base>
+
+<script>
+  import '../scripts/player';
+</script>

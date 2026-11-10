@@ -1,0 +1,100 @@
+---
+// The one shared page shell: <head>, fonts, nav, footer, and the tiny pre-paint script.
+import '@fontsource-variable/bricolage-grotesque/wght.css';   // weight axis only: 41 kB instead of 131 kB
+import '@fontsource-variable/onest/wght.css';
+import '../styles/tokens.css';
+import '../styles/site.css';
+import { nav, type PageKey } from '../data/site';
+import { script } from '../fonts/script';
+
+interface Props {
+  page: PageKey;
+  title: string;
+  description: string;
+  /** emoji used as the tab icon */
+  emoji: string;
+}
+const { page, title, description, emoji } = Astro.props;
+
+const icon = 'data:image/svg+xml,' + encodeURIComponent(
+  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><text y="26" font-size="26">${emoji}</text></svg>`,
+);
+const scriptFace = `@font-face{font-family:'Script';src:url(${script.url}) format('woff2');font-display:block}:root{--script-scale:${script.scale}}`;
+const others = [{ key: 'home', href: '/' }, ...nav].filter(p => p.key !== page);
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="icon" href={icon} />
+  <meta name="theme-color" content="#04090D" />
+  <link rel="preload" href={script.url} as="font" type="font/woff2" crossorigin />
+  <style set:html={scriptFace}></style>
+  {others.map(p => <link rel="prefetch" href={p.href} />)}
+
+  <script is:inline>
+    // Runs before first paint. Small on purpose.
+    (() => {
+      const root = document.documentElement;
+      root.classList.add('js');
+
+      // Arriving through a page-to-page view transition: skip entrance animations so the morph lands cleanly.
+      addEventListener('pagereveal', e => { if (e.viewTransition) root.classList.add('vt'); });
+
+      document.addEventListener('DOMContentLoaded', () => {
+        // Entrance reveals: elements fade up as they scroll into view, staggered among siblings.
+        const io = new IntersectionObserver(entries => {
+          for (const e of entries) {
+            if (!e.isIntersecting) continue;
+            e.target.classList.add('in');
+            io.unobserve(e.target);
+          }
+        }, { rootMargin: '0px 0px -5% 0px' });
+
+        const counts = new Map();
+        document.querySelectorAll('.reveal, .ledger .result, .thumbs button').forEach(el => {
+          const p = el.parentElement;
+          const n = counts.get(p) || 0;
+          counts.set(p, n + 1);
+          if (n) el.style.setProperty('--i', n);
+          io.observe(el);
+        });
+
+        // Endless (transform-only) loops pause while they are off-screen.
+        const vis = new IntersectionObserver(entries => {
+          for (const e of entries) e.target.classList.toggle('offscreen', !e.isIntersecting);
+        });
+        document.querySelectorAll('.bars, .stage-bars, .playlist').forEach(el => vis.observe(el));
+
+        // Pointer-follow sheen on [data-glow] panels.
+        document.querySelectorAll('[data-glow]').forEach(el => {
+          el.addEventListener('pointermove', e => {
+            const r = el.getBoundingClientRect();
+            el.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+            el.style.setProperty('--my', (e.clientY - r.top) + 'px');
+          }, { passive: true });
+        });
+      });
+    })();
+  </script>
+</head>
+<body class={`page-${page}`}>
+
+  <header class="nav">
+    {page !== 'home' && <a class="wordmark ink" href="/">Anoren</a>}
+    <nav class="nav-links">
+      {nav.map(n => <a href={n.href} aria-current={n.key === page ? 'page' : undefined}>{n.label}</a>)}
+    </nav>
+  </header>
+
+  <slot />
+
+  <footer class="footer">
+    <span>anoren.me</span>
+  </footer>
+
+</body>
+</html>

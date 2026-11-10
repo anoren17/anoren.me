@@ -1,0 +1,71 @@
+---
+import Base from '../layouts/Base.astro';
+import { results, total, bestCash, bestFinish, usd, ordinal, topPercent } from '../data/poker';
+
+const suits = ['♠', '♥', '♣', '♦'];
+---
+<Base page="poker" title="Poker — Anoren" description="Live tournament results." emoji="♠️">
+  <main class="shell">
+
+    <header class="page-head">
+      <h1 class="ink" data-text="Poker">Poker</h1>
+      <p class="sub reveal">Live tournament results</p>
+    </header>
+
+    <section class="poker-hero" data-glow>
+      <div class="suit-row" aria-hidden="true">
+        {suits.map((s, i) => <span class:list={[{ red: i % 2 === 1 }]} set:html={s + '&#xFE0E;'} />)}
+      </div>
+      <div>
+        <p class="eh-label">Total live earnings</p>
+        <p class="eh-figure"><span class="cur">$</span><span id="total" data-value={total}>{total.toLocaleString('en-US')}</span></p>
+        <script is:inline>
+          // Count up to the total (inline so the number never flashes at full value first).
+          (() => {
+            if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+            const el = document.getElementById('total');
+            const end = Number(el.dataset.value), final = el.textContent, DUR = 1500;
+            let t0 = null;
+            el.textContent = '0';
+            const step = now => {
+              if (t0 === null) t0 = now;
+              const p = Math.min(1, (now - t0) / DUR);
+              el.textContent = p < 1 ? Math.round(end * (1 - Math.pow(1 - p, 4))).toLocaleString('en-US') : final;
+              if (p < 1) requestAnimationFrame(step);
+            };
+            requestAnimationFrame(step);
+          })();
+        </script>
+      </div>
+      <div class="eh-substats">
+        <span><b>{results.length}</b> cashes</span>
+        <span><b>{bestFinish}<sup>{ordinal(bestFinish)}</sup></b> best finish</span>
+        <span><b>{usd(bestCash)}</b> best cash</span>
+      </div>
+    </section>
+
+    <section class="ledger">
+      <div class="ledger-head reveal">
+        <span>The record</span>
+        <span>WSOP · Las Vegas</span>
+      </div>
+
+      {results.map((r, i) => (
+        <div class:list={['result', { best: r.prize === bestCash }]} style={`--bar:${(r.prize / bestCash * 100).toFixed(1)}%`}>
+          <span class:list={['r-suit', { red: i % 2 === 1 }]} aria-hidden="true" set:html={suits[i % 4] + '&#xFE0E;'} />
+          <div class="r-body">
+            <span class="r-event">{r.buyIn} {r.game} — {r.name}{r.prize === bestCash && <> <span class="best-tag">Best</span></>}</span>
+            <span class="r-meta">{r.tag} · WSOP {r.year} · {r.date}</span>
+          </div>
+          <div class="r-stats">
+            <span class="r-place">{r.place.toLocaleString('en-US')}<sup>{ordinal(r.place)}</sup><span class="r-entries"> / {r.entries.toLocaleString('en-US')} ({topPercent(r)}%)</span></span>
+            <span class="r-prize">{usd(r.prize)}</span>
+          </div>
+        </div>
+      ))}
+
+      <p class="source-note reveal">Source — The Hendon Mob</p>
+    </section>
+
+  </main>
+</Base>

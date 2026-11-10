@@ -1,0 +1,50 @@
+---
+import Base from '../layouts/Base.astro';
+import { photos } from '../data/cooking';
+import { photo } from '../lib/images';
+
+const slides = await Promise.all(photos.map(photo));
+const sizes = '(max-width: 860px) 100vw, 50vw';
+const pad = (n: number) => String(n).padStart(2, '0');
+---
+<Base page="cooking" title="Cooking — Anoren" description="Plates from the pan." emoji="🍳">
+  <main class="shell cook">
+
+    <header class="page-head">
+      <h1 class="ink" data-text="Cooking">Cooking</h1>
+    </header>
+
+    <div class="stage" id="stage" aria-roledescription="carousel" aria-label="Cooking photos">
+      {slides.map((s, i) => (
+        <div class:list={['slide', { active: i === 0 }]} style={`--bg:url("${s.thumb}")`}>
+          {i === 0
+            ? <img alt={`Plate ${i + 1}`} src={s.src} srcset={s.srcset} sizes={sizes} decoding="async" fetchpriority="high" />
+            : <img alt={`Plate ${i + 1}`} data-src={s.src} data-srcset={s.srcset} sizes={sizes} decoding="async" />}
+        </div>
+      ))}
+    </div>
+
+    <div class="cook-controls reveal">
+      <div class="car-controls">
+        <button class="car-btn" id="prev" aria-label="Previous photo">‹</button>
+        <button class="car-btn" id="next" aria-label="Next photo">›</button>
+        <span class="car-counter"><b id="cur">01</b> / <span>{pad(slides.length)}</span></span>
+        <button class="car-toggle" id="toggle">Pause</button>
+      </div>
+      <div class="progress"><i id="bar"></i></div>
+    </div>
+
+    <div class="thumbs" id="thumbs">
+      {slides.map((s, i) => (
+        <button class:list={[{ active: i === 0 }]} aria-label={`Photo ${i + 1}`}>
+          <img src={s.thumb} alt="" loading="lazy" decoding="async" />
+        </button>
+      ))}
+    </div>
+
+  </main>
+</Base>
+
+<script>
+  import '../scripts/carousel';
+</script>

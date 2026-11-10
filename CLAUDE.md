@@ -1,8 +1,8 @@
 # anoren.me — Personal Website
 
-Personal static site for Anor. Minimal, editorial design. Four pages: Home (socials only),
-Cooking (41-photo carousel), Music (carousel of Amazon Music + YouTube embeds with dated notes — 42 slides),
-Poker (live WSOP results — earnings hero + ledger). **No crypto page.**
+Personal static site for Anor. Blue, calligraphic, animated. Four pages: Home (wordmark, socials, three
+section tiles), Cooking (41-photo carousel), Music (player: stage + playlist of Amazon Music + YouTube
+embeds with dated notes — 42 items), Poker (live WSOP results — earnings panel + ledger). **No crypto page.**
 
 ## ⚠️ Content & voice rule (read before writing any copy)
 - **Never invent taglines, descriptions, or first-person ("I…") copy.** All text that speaks
@@ -14,9 +14,9 @@ Poker (live WSOP results — earnings hero + ledger). **No crypto page.**
 - Approved so far: headlines "Cooking", "Music", "Poker". Music sub-line
   "The songs I can't stop playing." is approved. Poker eyebrow "Live tournament results" and
   the dated music notes (Anor's own words) are approved.
-- Still UNCONFIRMED (his call): footer right-side microcopy was removed at his request —
-  footers now show only `anoren.me`. The home eyebrow "Personal — est. 2026" and the cooking
-  sub-line are still my wording; confirm or replace if he objects.
+- Footers show only `anoren.me` (his request). The home eyebrow "Personal — est. 2026" and the cooking
+  sub-line (both my wording, never confirmed) were **removed** in the 2026-11-09 redesign — don't
+  re-add them or anything like them without his words.
 - **Approved tagline** on home page (Anor's own words): "Nothing is true, Everything is permitted. 🗡️"
 
 ## How it's wired up
@@ -51,18 +51,27 @@ The `CNAME` file in this repo root holds `anoren.me` and must stay — it tells 
 
 ## File structure
 ```
-index.html        Home — wordmark, social links, contents index
-cooking.html      41-photo auto-advancing carousel (JS-driven from assets/cooking/)
-music.html        Carousel of Amazon Music + YouTube embeds + notes/headings (42 slides, JS `items` array)
-poker.html        WSOP results — giant earnings hero + suit-marked results ledger
-styles.css        Shared stylesheet (Fraunces / Space Mono / Inter; persimmon accent)
-assets/cooking/   img-01.jpg … img-41.jpg (downloaded from the old Google Sites page)
+index.html        Home — interactive wordmark, social links, three section tiles (inline script)
+cooking.html      41-photo auto-advancing carousel + thumbnail grid (JS-driven from assets/cooking/)
+music.html        Stage + playlist of Amazon Music + YouTube embeds + notes/headings (JS `items` array)
+poker.html        WSOP results — earnings panel (count-up) + suit-marked results ledger
+styles.css        Shared stylesheet — tokens at the top (`--royal` is the accent)
+site.js           Shared behaviour, loaded in <head>: entrance reveals, pointer glow, `.js`/`.vt` flags
+assets/cooking/   img-01.jpg … img-41.jpg (full size) + thumbs/img-NN.jpg (400px copies for the grid)
 CNAME             Custom-domain marker for GitHub Pages
 ```
 
 ## Design system
-- Palette: paper `#F3EFE6`, ink `#17130E`, persimmon accent `#E2552B`, sage `#5E6A4C`.
-- Type: **Fraunces** (display), **Space Mono** (labels), **Inter** (body).
+- Palette: ground `#F5F7FC`, navy ink `#0B1337`, **blue accent `#0B5CFF`** (`--royal`; deep `#0A2BB5` for
+  ink shading), wash `#DFE9FF`, turquoise `#4FE6D6` (spark — only on blue/navy surfaces). Anor asked for
+  blue instead of the old orange, then for "a better blue" than `#1E44E2`.
+- Type: **Alex Brush** (calligraphy — wordmark, page titles, tile titles; his request), **Bricolage
+  Grotesque** (numbers, event names, notes), **Onest** (text; has Cyrillic for song titles).
+- Motion (his brief: "highly stunning, interactive and smooth"): lettering is written on + sheen sweep;
+  home wordmark has a pointer light + tilt; cross-page **view transitions** morph wordmark / tiles /
+  titles / nav pill (names set in `styles.css`; body class `page-*` picks them); music tile equalizer
+  follows the pointer; poker tile cards fan; poker rows' underline = that cash ÷ best cash (computed in
+  JS from `.r-prize`). All of it is disabled under `prefers-reduced-motion`.
 - Each page begins with a `<!-- @dsCard group="Pages" -->` marker so it renders as a card
   in the claude.ai/design pane. The comment is inert in browsers — safe to keep.
 
@@ -74,11 +83,14 @@ CNAME             Custom-domain marker for GitHub Pages
 
 ### Common edits
 - **Socials** → `index.html`, the `.socials` block (handles live in the link text).
-- **More cooking photos** → drop files in `assets/cooking/`, bump `const N` in `cooking.html`.
+- **More cooking photos** → drop files in `assets/cooking/`, bump `const N` in `cooking.html`, update
+  "41 plates" on the home tile, and make the thumb:
+  `sips -Z 400 -s formatOptions 62 assets/cooking/img-NN.jpg --out assets/cooking/thumbs/img-NN.jpg`
+  (a missing thumb falls back to the full photo). Home tile rotates `picks` in `index.html`.
 - **Music** → add a row to the `items` array in `music.html`: `['a', ASIN, id, height, 'Title']` for
-  Amazon Music (title is required — shown in thumbnail strip), `['y', videoId, 'Title']` for YouTube,
-  `['n', date, text]` for a note, `['h', 'Heading HTML']` for a section heading. The page is now a
-  carousel (same chrome as cooking) with no autoplay. Broken/removed Amazon tracks: B0B5FN3DBZ,
+  Amazon Music (title is required — shown in the playlist), `['y', videoId, 'Title']` for YouTube,
+  `['n', date, text]` for a note, `['h', 'Heading HTML']` for a section heading. One item shows on the
+  stage at a time; no autoplay. "Vilen — Ek Raat" (oRZ0cfZ9SeU) is age-restricted and won't embed. Broken/removed Amazon tracks: B0B5FN3DBZ,
   B0CDN9KQKN, B0C4VS3CC1, B09VQ6BR7K, B0C6QXZYLN (no longer in Amazon catalog — do not re-add).
 - **Poker** → edit the `.result` rows in the `.ledger` and the `.eh-substats` in `poker.html`; mark the
   best cash with `class="result best"`. Each `.r-place` now includes field size and top-% via
@@ -88,6 +100,7 @@ CNAME             Custom-domain marker for GitHub Pages
   Page is WSOP-only by design (a 2017 WPT India cash exists on Hendon Mob but is deliberately
   excluded — confirmed with Anor 2026-08-27). Current: 7 cashes, $19,972, best 32nd / 1,299 (2.5%)
   in $1,500 Shootout. Poker page stays as a ledger (not a carousel) — 7 rows is the right format.
+  The hero figure counts up to whatever number is in the HTML; nothing else to update.
 
 ## Migration note
 This replaced a Google Sites site (sites.google.com). Old pages: Home, Cooking Pan, Music,
@@ -114,3 +127,5 @@ enforced via API); added home tagline. Site is fully live and secure at https://
 **Session note (2026-06-14):** Fixed music page iframe/link interactivity — invisible inactive slides (`position:absolute;inset:0;opacity:0`) were blocking pointer events on the active slide's iframes. Fix: `pointer-events:none` on inactive slides, `pointer-events:auto` on active. No open TODOs.
 
 **Session note (2026-08-27):** Synced 2 new WSOP 2026 cashes from Hendon Mob (pulled via browser tools since Hendon Mob blocks WebFetch); confirmed with Anor to keep the poker page WSOP-only rather than backfill an older non-WSOP cash. No open TODOs.
+
+**Session note (2026-11-09):** Full redesign at Anor's request — blue accent (`#0B5CFF`), Alex Brush calligraphy lettering with effects, photo-first cooking page, music player layout, and an interactive/animated layer (view transitions, pointer effects, count-up). Local preview only needs `python3 -m http.server`; its dropped connections under load are a test-server artifact, not a site bug.

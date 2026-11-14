@@ -15,15 +15,16 @@
 html {
   -webkit-font-smoothing: antialiased;
   -webkit-text-size-adjust: 100%;
-  background: var(--night);
+  /* the page background lives here, not on body: body must stay transparent so the hero lattice
+     (z-index:-1, root stacking context) shows, without .hero having to isolate its children */
+  background:
+    radial-gradient(70rem 30rem at 18% -6%, rgba(25, 240, 210, 0.09), rgba(25, 240, 210, 0) 62%) no-repeat,
+    var(--night);
   color-scheme: dark;
 }
 
 body {
   font-family: var(--body);
-  background:
-    radial-gradient(70rem 30rem at 18% -6%, rgba(25, 240, 210, 0.09), rgba(25, 240, 210, 0) 62%) no-repeat,
-    var(--night);
   color: var(--text);
   line-height: 1.5;
   min-height: 100vh;
@@ -254,12 +255,11 @@ img { display: block; max-width: 100%; }
    HOME
    ========================================================= */
 .hero {
-  position: relative;
-  isolation: isolate;
+  position: relative;      /* no isolation: eagle vision lifts the socials above its veil (see creed.css) */
   container-type: inline-size;
   padding: clamp(8px, 2vw, 24px) 0 clamp(28px, 4vw, 48px);
 }
-/* Eagle vision: a lattice that exists only inside the pointer's light (--hx/--hy/--vis set by wordmark.ts). */
+/* Pointer lattice: a pattern that exists only inside the pointer's light (--hx/--hy/--vis set by wordmark.ts). */
 .hero::before {
   content: "";
   position: absolute;

@@ -4,6 +4,7 @@ import '@fontsource-variable/bricolage-grotesque/wght.css';   // weight axis onl
 import '@fontsource-variable/onest/wght.css';
 import '../styles/tokens.css';
 import '../styles/site.css';
+import '../styles/creed.css';
 import { nav, type PageKey } from '../data/site';
 import { script } from '../fonts/script';
 
@@ -26,6 +27,12 @@ const firstCss =
   `@view-transition{navigation:auto}@media (prefers-reduced-motion:reduce){@view-transition{navigation:none}}` +
   `@font-face{font-family:'Script';src:url(${script.url}) format('woff2');font-display:block}:root{--script-scale:${script.scale}}`;
 const others = [{ key: 'home', href: '/' }, ...nav].filter(p => p.key !== page);
+// Sync-in slices: vertical position %, thickness px, length %, delay ms, duration ms.
+const slices = [
+  { y: 9, h: 2, w: 70, d: 40, t: 520 }, { y: 18, h: 9, w: 46, d: 120, t: 460 }, { y: 31, h: 3, w: 88, d: 0, t: 600 },
+  { y: 44, h: 14, w: 38, d: 200, t: 420 }, { y: 57, h: 2, w: 64, d: 80, t: 540 }, { y: 68, h: 6, w: 52, d: 260, t: 460 },
+  { y: 79, h: 3, w: 80, d: 150, t: 580 }, { y: 90, h: 10, w: 34, d: 40, t: 440 },
+];
 ---
 <!doctype html>
 <html lang="en">
@@ -46,8 +53,22 @@ const others = [{ key: 'home', href: '/' }, ...nav].filter(p => p.key !== page);
       const root = document.documentElement;
       root.classList.add('js');
 
-      // Arriving through a page-to-page view transition: skip entrance animations so the morph lands cleanly.
-      addEventListener('pagereveal', e => { if (e.viewTransition) root.classList.add('vt'); });
+      // Arriving through a page-to-page view transition (.vt): skip entrance animations so the morph lands
+      // cleanly, and pick the leap direction — dive into a section, rise back home (creed.css).
+      // A fresh load (.fresh) gets the Animus sync-in instead.
+      const depth = url => { try { const p = new URL(url, location.href).pathname; return p === '/' || p === '/index.html' ? 0 : 1; } catch { return 1; } };
+      if ('onpagereveal' in window) {
+        addEventListener('pagereveal', e => {
+          if (!e.viewTransition) { root.classList.add('fresh'); return; }
+          root.classList.add('vt');
+          const act = window.navigation && navigation.activation;
+          const from = act && act.from ? act.from.url : document.referrer;
+          root.dataset.leap = depth(location.href) < depth(from) ? 'rise' : 'dive';
+          e.viewTransition.finished.finally(() => delete root.dataset.leap);
+        });
+      } else {
+        root.classList.add('fresh');
+      }
 
       document.addEventListener('DOMContentLoaded', () => {
         // Entrance reveals: elements fade up as they scroll into view, staggered among siblings.
@@ -100,6 +121,15 @@ const others = [{ key: 'home', href: '/' }, ...nav].filter(p => p.key !== page);
   <footer class="footer">
     <span>anoren.me</span>
   </footer>
+
+  <!-- Animus sync-in: data slices that sweep across once as the page arrives (creed.css). -->
+  <div class="sync" aria-hidden="true">
+    {slices.map(s => <i style={`--y:${s.y}%;--h:${s.h}px;--w:${s.w}%;--d:${s.d}ms;--t:${s.t}ms`}></i>)}
+  </div>
+
+  <script>
+    import '../scripts/eagle';
+  </script>
 
 </body>
 </html>

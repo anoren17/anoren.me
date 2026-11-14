@@ -35,6 +35,7 @@ function restartBar() {
 
 /** dir: +1 = moving forward (the new photo drifts in from the right), -1 = back */
 function go(n: number, dir = 1) {
+  stage.classList.add('synced');   // from now on, each incoming photo glitches in (creed.css)
   const old = slides[idx]!;
   thumbs[idx]!.classList.remove('active');
   idx = (n + N) % N;

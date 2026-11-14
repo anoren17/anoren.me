@@ -19,8 +19,9 @@ Music (stage + playlist of Amazon Music / YouTube embeds with dated notes), Poke
 glance, nothing mediocre — and effects must cost almost nothing in load time or CPU.
 - **Colour**: electric turquoise on a dark ground (he rejected orange, then two blues).
 - **Lettering**: calligraphy (Alex Brush) — approved; alternates kept on a shelf (below).
-- **Persona**: Assassin's Creed. Use **original** motifs only (blade, decode effect, "eagle vision" light) —
-  never logos, artwork or UI lifted from the games.
+- **Persona**: Assassin's Creed. Use **original** motifs only — never logos, artwork or UI lifted from the games.
+  He picks which motifs ship (2026-11-13: chose eagle vision, leap of faith, Animus sync-in, scroll hero;
+  passed on blade-strike clicks, decode-everywhere, DNA strand, 404 page).
 
 ## Commands
 `npm run dev` (live preview) · `npm run build` → `dist/` · `npm run preview` (serve the build, port 4321) ·
@@ -34,8 +35,9 @@ src/pages/*.astro       index, cooking, music, poker
 src/data/site.ts        nav + socials            src/data/music.ts   the playlist (helpers: amazon/youtube/note/heading)
 src/data/poker.ts       results → totals computed src/data/cooking.ts photo list (globbed) + home tile picks
 src/assets/cooking/     img-NN.jpg originals (compressed to WebP at build by src/lib/images.ts)
-src/scripts/*.ts        wordmark (light, tilt, eagle vision), decode (creed), tiles, carousel, player
+src/scripts/*.ts        wordmark (light, tilt, lattice), decode (creed), eagle, tiles, carousel, player
 src/styles/tokens.css   colours, type, motion, layout tokens      src/styles/site.css  everything else
+src/styles/creed.css    the Assassin's Creed effects layer (header comment lists all four)
 src/fonts/script.ts     the calligraphy shelf                      docs/calligraphy-shelf.png  comparison sheet
 public/CNAME            .github/workflows/deploy.yml (build + deploy to Pages)
 ```
@@ -65,14 +67,23 @@ public/CNAME            .github/workflows/deploy.yml (build + deploy to Pages)
 - Home: blade SVG extends once under the wordmark; creed decodes on load/hover; pointer light + tilt on the
   wordmark; lattice visible only in the pointer's light. Tiles: photo crossfade, equalizer, card fan.
 - Cross-page view transitions morph wordmark / tiles / titles / nav pill (names in `site.css`, body `page-*`).
-- **Performance rules** (measured 2026-11-09: idle main thread <1% on every page, ~4 kB JS gz per page):
+- **AC layer (`creed.css`)**: *leap of faith* — root dives into a section, rises back home (`data-leap` set in
+  `Base.astro`'s `pagereveal`), light streaks behind; *Animus sync-in* — data slices on every arrival, scanline
+  glitch on a fresh load (`html.fresh`), cooking photos glitch between slides; *eagle vision* — tap **E** to
+  toggle (or hold it), or press-and-hold an empty spot (`eagle.ts`): world greys under a veil, usable things glow turquoise, the current
+  target (photo / track / best cash) glows `--gold`; *scroll hero* — name tilts back, blade sheathes (CSS scroll timeline).
+- **Performance rules** (re-measured 2026-11-13 with the AC layer: idle main thread ≤1% on every page, eagle
+  vision held ~0.3%):
   glows are static blurred copies, never a filter on something animating; endless loops are transform-only
   and pause off-screen; pointer effects run only while the pointer moves; nothing else loops; no canvas/WebGL
   loops; `prefers-reduced-motion` switches all motion off. Re-measure after adding effects.
-- **Traps (both caused real bugs):** the hero and page-title lettering have padded, invisible boxes (room for the
+- **Traps (each caused a real bug):** the hero and page-title lettering have padded, invisible boxes (room for the
   glow and write-on mask), so they are `pointer-events:none` and `.nav` sits at `z-index:2` — keep it that way or
   nav links stop clicking. The `@view-transition` opt-in is inlined first in `Base.astro` *and* kept in `site.css`;
-  with only the stylesheet copy, most page changes silently skipped the morph.
+  with only the stylesheet copy, most page changes silently skipped the morph. Eagle vision lifts targets above
+  a fixed veil, so their ancestors must not be stacking contexts — no isolation/transform/filter/mask left on
+  `.hero` or `main` (why the page background lives on `html`). Keep scroll `animation-timeline` in its own,
+  more specific rule: the minifier folds it into the `animation` shorthand, which Chrome rejects silently.
 
 ## Hosting
 | | |
@@ -98,3 +109,5 @@ Google Site (Drive file `1n4vwoxD6vCf305v8cdR4BHkHOxiZ8TTw`) is not scrapable �
 **Session note (2026-08-27):** Synced 2 new WSOP 2026 cashes; confirmed poker stays WSOP-only.
 
 **Session note (2026-11-09):** Blue redesign shipped then rejected; migrated to Astro 7 + TypeScript and rebuilt as night/turquoise with Assassin's Creed motifs, then fixed the bugs now listed under Design system → Traps. Headless-Chrome checks need a real-time session (virtual-time screenshots stall animations).
+
+**Session note (2026-11-13):** Added the AC effects layer (`creed.css`, `eagle.ts`) — four effects he picked from eight offered; verified in Chrome at 320–1920px.

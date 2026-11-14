@@ -1,0 +1,299 @@
+/* =========================================================
+   anoren.me — Assassin's Creed–inspired effects
+   Original takes only: no logos, artwork or interface lifted from the games.
+
+   1. Leap of faith   page-to-page transitions; direction from Base.astro (html[data-leap="dive" | "rise"])
+   2. Animus sync-in  data slices sweep across as a page arrives and it jolts into sync (after the landing,
+                      when arriving by a leap); a fresh load glitches in out of scanlines;
+                      cooking photos glitch between slides
+   3. Eagle vision    hold E, or press and hold an empty spot (src/scripts/eagle.ts): the world drains to
+                      grey, things you can use glow turquoise, the current target glows gold
+   4. Scroll hero     scrolling down tilts the name back and sheathes the blade (no script)
+
+   Cost: every effect runs once, or only while scrolled/held. Nothing here loops.
+   ========================================================= */
+
+
+/* ---------------------------------------------------------
+   1. Leap of faith
+   The old page pitches back and falls away, there is a split second of free fall with streaks of light
+   rushing past, then the new page lands and settles. Heading back home runs it in reverse (rise).
+   Named elements (wordmark, tiles, titles, nav pill) still morph across, floating over the fall.
+   Timeline (0.85s): old page 0–0.42s · free fall ~0.3–0.5s · new page lands 0.32–0.85s.
+   --------------------------------------------------------- */
+@keyframes dive-out {
+  0%   { transform: none; opacity: 1; filter: none; }
+  100% { transform: perspective(1000px) translateY(38vh) rotateX(30deg) scale(0.8); opacity: 0; filter: blur(3px) brightness(0.5); }
+}
+@keyframes dive-in {
+  0%   { transform: translateY(-14vh) scale(1.05); opacity: 0; filter: blur(3px); }
+  45%  { opacity: 1; filter: none; }
+  72%  { transform: translateY(1.2vh) scale(0.995); }
+  100% { transform: none; opacity: 1; filter: none; }
+}
+@keyframes rise-out {
+  0%   { transform: none; opacity: 1; filter: none; }
+  100% { transform: perspective(1000px) translateY(-38vh) rotateX(-30deg) scale(0.8); opacity: 0; filter: blur(3px) brightness(0.5); }
+}
+@keyframes rise-in {
+  0%   { transform: translateY(14vh) scale(1.05); opacity: 0; filter: blur(3px); }
+  45%  { opacity: 1; filter: none; }
+  72%  { transform: translateY(-1.2vh) scale(0.995); }
+  100% { transform: none; opacity: 1; filter: none; }
+}
+
+html[data-leap]::view-transition-group(*) { animation-duration: 0.7s; }
+
+html[data-leap="dive"]::view-transition-old(root),
+html[data-leap="dive"]::view-transition-old(*):only-child { animation: dive-out 0.42s cubic-bezier(.4, 0, .75, .6) both; transform-origin: 50% 100%; }
+html[data-leap="dive"]::view-transition-new(root),
+html[data-leap="dive"]::view-transition-new(*):only-child { animation: dive-in 0.53s cubic-bezier(.2, .7, .25, 1) 0.32s both; }
+
+html[data-leap="rise"]::view-transition-old(root),
+html[data-leap="rise"]::view-transition-old(*):only-child { animation: rise-out 0.42s cubic-bezier(.4, 0, .75, .6) both; transform-origin: 50% 0; }
+html[data-leap="rise"]::view-transition-new(root),
+html[data-leap="rise"]::view-transition-new(*):only-child { animation: rise-in 0.53s cubic-bezier(.2, .7, .25, 1) 0.32s both; }
+
+/* The free fall: streaks of light rushing past behind both pages (upward while diving, downward while rising).
+   Each layer is one repeating streak; they move at different speeds for depth. */
+html[data-leap]::view-transition {
+  background:
+    linear-gradient(transparent, rgba(25, 240, 210, 0.9), transparent)   6% 0 / 2px 46vh repeat-y,
+    linear-gradient(transparent, rgba(212, 255, 246, 0.95), transparent) 14% 0 / 3px 62vh repeat-y,
+    linear-gradient(transparent, rgba(25, 240, 210, 0.7), transparent)  22% 0 / 1px 34vh repeat-y,
+    linear-gradient(transparent, rgba(25, 240, 210, 0.85), transparent) 31% 0 / 2px 54vh repeat-y,
+    linear-gradient(transparent, rgba(212, 255, 246, 0.8), transparent) 39% 0 / 1px 40vh repeat-y,
+    linear-gradient(transparent, rgba(25, 240, 210, 0.95), transparent) 48% 0 / 3px 70vh repeat-y,
+    linear-gradient(transparent, rgba(25, 240, 210, 0.7), transparent)  57% 0 / 1px 38vh repeat-y,
+    linear-gradient(transparent, rgba(212, 255, 246, 0.9), transparent) 66% 0 / 2px 58vh repeat-y,
+    linear-gradient(transparent, rgba(25, 240, 210, 0.8), transparent)  74% 0 / 1px 44vh repeat-y,
+    linear-gradient(transparent, rgba(25, 240, 210, 0.9), transparent)  83% 0 / 3px 66vh repeat-y,
+    linear-gradient(transparent, rgba(212, 255, 246, 0.75), transparent) 91% 0 / 1px 36vh repeat-y,
+    linear-gradient(transparent, rgba(25, 240, 210, 0.85), transparent) 97% 0 / 2px 50vh repeat-y,
+    radial-gradient(80% 60% at 50% 50%, rgba(25, 240, 210, 0.08), transparent 70%),
+    var(--night);
+}
+html[data-leap="dive"]::view-transition { animation: streak-up 0.85s cubic-bezier(.3, 0, .6, 1) both; }
+html[data-leap="rise"]::view-transition { animation: streak-down 0.85s cubic-bezier(.3, 0, .6, 1) both; }
+@keyframes streak-up {
+  from { background-position: 6% 0, 14% 20vh, 22% 50vh, 31% 10vh, 39% 70vh, 48% 30vh, 57% 5vh, 66% 60vh, 74% 25vh, 83% 80vh, 91% 40vh, 97% 15vh, 0 0, 0 0; }
+  to   { background-position: 6% -230vh, 14% -300vh, 22% -170vh, 31% -260vh, 39% -190vh, 48% -330vh, 57% -180vh, 66% -280vh, 74% -210vh, 83% -310vh, 91% -160vh, 97% -240vh, 0 0, 0 0; }
+}
+@keyframes streak-down {
+  from { background-position: 6% 0, 14% 20vh, 22% 50vh, 31% 10vh, 39% 70vh, 48% 30vh, 57% 5vh, 66% 60vh, 74% 25vh, 83% 80vh, 91% 40vh, 97% 15vh, 0 0, 0 0; }
+  to   { background-position: 6% 230vh, 14% 340vh, 22% 220vh, 31% 270vh, 39% 260vh, 48% 360vh, 57% 185vh, 66% 340vh, 74% 235vh, 83% 390vh, 91% 200vh, 97% 255vh, 0 0, 0 0; }
+}
+
+
+/* ---------------------------------------------------------
+   2. Animus sync-in
+   --------------------------------------------------------- */
+.sync {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  overflow: hidden;
+  pointer-events: none;
+}
+.sync i {
+  position: absolute;
+  left: 0;
+  top: var(--y);
+  width: var(--w);
+  height: var(--h);
+  background:
+    linear-gradient(90deg, rgba(25, 240, 210, 0), rgba(25, 240, 210, 0.7) 35%, rgba(212, 255, 246, 0.95) 52%, rgba(25, 240, 210, 0.7) 70%, rgba(25, 240, 210, 0)),
+    repeating-linear-gradient(90deg, rgba(25, 240, 210, 0.35) 0 3px, transparent 3px 11px);
+  opacity: 0;
+  animation: slice var(--t) cubic-bezier(.3, .6, .4, 1) var(--d) both;
+}
+@keyframes slice {
+  0%   { opacity: 0; transform: translateX(-100%); }
+  15%  { opacity: 1; }
+  100% { opacity: 0; transform: translateX(100vw); }
+}
+
+/* A fresh load (not a leap): the page resolves out of scanlines and jumps sideways a few times.
+   steps() keeps it to six repaints. backwards-only fill so no mask or translate is left behind
+   (either would turn main into a stacking context and trap eagle vision's targets). */
+@keyframes sync-in {
+  0%   { opacity: 0; }
+  10%  { opacity: 1; translate: -14px 0; -webkit-mask-image: repeating-linear-gradient(#000 0 1px, transparent 1px 9px); mask-image: repeating-linear-gradient(#000 0 1px, transparent 1px 9px); }
+  25%  { translate: 9px 0;  -webkit-mask-image: repeating-linear-gradient(#000 0 2px, transparent 2px 9px); mask-image: repeating-linear-gradient(#000 0 2px, transparent 2px 9px); }
+  40%  { translate: -5px 0; -webkit-mask-image: repeating-linear-gradient(#000 0 4px, transparent 4px 9px); mask-image: repeating-linear-gradient(#000 0 4px, transparent 4px 9px); }
+  58%  { translate: 3px 0;  -webkit-mask-image: repeating-linear-gradient(#000 0 6px, transparent 6px 9px); mask-image: repeating-linear-gradient(#000 0 6px, transparent 6px 9px); }
+  76%  { translate: -1px 0; -webkit-mask-image: repeating-linear-gradient(#000 0 8px, transparent 8px 9px); mask-image: repeating-linear-gradient(#000 0 8px, transparent 8px 9px); }
+  100% { opacity: 1; translate: none; -webkit-mask-image: none; mask-image: none; }
+}
+html.fresh body > :is(.nav, main, .footer) { animation: sync-in 0.55s steps(1, end) backwards; }
+
+/* Arriving through a leap, the new page is still in free fall for ~0.55s, so the sync waits for the landing:
+   the slices sweep as it lands, then the page jolts into sync once the transition has finished (0.85s).
+   (Without this the whole sync-in played unseen behind the fall.) */
+html.vt .sync i { animation-delay: calc(var(--d) + 540ms); }
+@keyframes sync-jolt {
+  0%   { translate: 12px 0;  -webkit-mask-image: repeating-linear-gradient(#000 0 4px, transparent 4px 8px); mask-image: repeating-linear-gradient(#000 0 4px, transparent 4px 8px); }
+  20%  { translate: -8px 0;  -webkit-mask-image: repeating-linear-gradient(#000 0 6px, transparent 6px 8px); mask-image: repeating-linear-gradient(#000 0 6px, transparent 6px 8px); }
+  40%  { translate: 5px 0;   -webkit-mask-image: repeating-linear-gradient(#000 0 7px, transparent 7px 8px); mask-image: repeating-linear-gradient(#000 0 7px, transparent 7px 8px); }
+  60%  { translate: -2px 0;  -webkit-mask-image: none; mask-image: none; }
+  80%  { translate: 1px 0; }
+  100% { translate: none; }
+}
+/* fill mode none: nothing is left behind afterwards (a leftover mask or translate would trap eagle vision's targets) */
+html.vt body > :is(.nav, main, .footer) { animation: sync-jolt 0.4s steps(1, end) 0.82s; }
+
+/* Cooking: each incoming photo glitches in — slices of it jump sideways, a scan band passes, then it settles. */
+@keyframes img-glitch {
+  0%   { clip-path: inset(12% 0 55% 0); translate: -14px 0; }
+  18%  { clip-path: inset(48% 0 18% 0); translate: 10px 0; }
+  36%  { clip-path: inset(0 0 62% 0);   translate: -6px 0; }
+  54%  { clip-path: inset(30% 0 0 0);   translate: 4px 0; }
+  72%  { clip-path: inset(0);           translate: -2px 0; }
+  100% { clip-path: none;               translate: none; }
+}
+@keyframes slide-scan {
+  0%   { opacity: 1; transform: translateY(-12%); }
+  100% { opacity: 0; transform: translateY(14%); }
+}
+.cook .stage .slide::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  background: linear-gradient(transparent 0 22%, rgba(25, 240, 210, 0.32) 22% 23.5%, transparent 23.5% 57%,
+    rgba(212, 255, 246, 0.55) 57% 57.5%, transparent 57.5% 71%, rgba(25, 240, 210, 0.2) 71% 76%, transparent 76%);
+}
+.cook .stage.synced .slide.active img {
+  animation:
+    push-in calc(var(--hold, 4.2s) + 1.2s) ease-out both,
+    img-glitch 0.42s steps(1, end) backwards;
+}
+.cook .stage.synced.paused .slide.active img { animation-play-state: paused, running; }
+.cook .stage.synced .slide.active::after { animation: slide-scan 0.45s steps(5, end) both; }
+
+
+/* ---------------------------------------------------------
+   3. Eagle vision
+   One veil dims and greys everything beneath it (backdrop-filter; hidden, so free, when not in use).
+   Targets are lifted above the veil: turquoise = things you can use, gold = the current target.
+   Lifting only works for elements whose ancestors are not stacking contexts — keep .hero and main
+   un-isolated, and don't leave transforms, filters or masks on them.
+   --------------------------------------------------------- */
+html.eagle, html.eagle-arm { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+
+.eagle-veil {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  background: radial-gradient(130vmax circle at var(--ex, 50%) var(--ey, 50%), rgba(8, 22, 30, 0.22), rgba(2, 6, 10, 0.8) 70%);
+  -webkit-backdrop-filter: grayscale(1) brightness(0.55) contrast(1.15);
+  backdrop-filter: grayscale(1) brightness(0.55) contrast(1.15);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s ease, visibility 0s linear 0.4s;
+}
+html.eagle .eagle-veil { opacity: 1; visibility: visible; transition: opacity 0.45s ease; }
+
+/* the pulse that spreads out from where it was triggered */
+@property --er { syntax: '<length>'; inherits: false; initial-value: 0px; }
+.eagle-ring {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(circle at var(--ex, 50%) var(--ey, 50%),
+    transparent calc(var(--er) - 90px), rgba(25, 240, 210, 0.14) calc(var(--er) - 14px),
+    rgba(212, 255, 246, 0.9) calc(var(--er) - 1px), rgba(25, 240, 210, 0) calc(var(--er) + 2px));
+}
+.eagle-ring.go { animation: eagle-pulse 1.1s cubic-bezier(.25, .6, .35, 1) both; }
+@keyframes eagle-pulse { from { --er: 0px; opacity: 1; } 65% { opacity: 0.85; } to { --er: 115vmax; opacity: 0; } }
+
+/* time slows: the idle equalizers hold still */
+html.eagle :is(.bars i::before, .stage-bars i, .pl-eq i) { animation-play-state: paused; }
+
+/* --- turquoise: what you can use --- */
+html.eagle .nav { z-index: 61; }
+html.eagle .nav-links a:not([aria-current]) { color: var(--turq); text-shadow: 0 0 14px rgba(25, 240, 210, 0.8); }
+html.eagle .social,
+html.eagle :is(.car-btn, .car-toggle),
+html.eagle .thumbs button,
+html.eagle .tile,
+html.eagle .playlist { position: relative; z-index: 61; }
+html.eagle .social { color: var(--turq); box-shadow: inset 0 0 0 1px var(--turq), 0 0 20px -4px rgba(25, 240, 210, 0.8); }
+html.eagle .social .handle { color: rgba(25, 240, 210, 0.75); }
+html.eagle :is(.car-btn, .car-toggle) { color: var(--turq); box-shadow: inset 0 0 0 1px var(--turq), 0 0 18px -4px rgba(25, 240, 210, 0.8); }
+html.eagle .tile { box-shadow: inset 0 0 0 1.5px var(--turq), 0 0 46px -8px rgba(25, 240, 210, 0.8); }
+html.eagle .playlist { box-shadow: inset 0 0 0 1px var(--turq), 0 0 40px -12px rgba(25, 240, 210, 0.7); }
+html.eagle .playlist button:not(.active) { color: var(--turq); }
+/* allies are seen as turquoise silhouettes */
+html.eagle :is(.tile-media, .cards, .thumbs button:not(.active) img) {
+  filter: grayscale(1) sepia(1) hue-rotate(130deg) saturate(3) brightness(0.8);
+}
+
+/* --- gold: the current target --- */
+html.eagle .cook .stage {
+  z-index: 61;
+  box-shadow: 0 0 0 2px var(--gold), 0 0 70px -10px var(--gold-glow);
+  filter: grayscale(1) sepia(1) saturate(2.2) brightness(0.95);
+}
+html.eagle .thumbs button.active { outline-color: var(--gold); box-shadow: 0 0 24px -2px var(--gold-glow); }
+html.eagle .thumbs button.active img { filter: grayscale(1) sepia(1) saturate(2.2) brightness(1.05); }
+html.eagle .pl-pill { background: var(--gold); box-shadow: 0 0 30px -4px var(--gold-glow); }
+html.eagle .ledger .result.best {
+  z-index: 61;
+  border-radius: var(--r-md);
+  background: rgba(255, 201, 77, 0.12);
+  box-shadow: inset 0 0 0 1.5px var(--gold), 0 0 50px -10px var(--gold-glow);
+}
+html.eagle .result.best :is(.r-event, .r-place, .r-prize, .r-suit) { color: var(--gold); }
+html.eagle .result.best .best-tag { background: var(--gold); }
+
+/* smooth in and out (full lists, so the transitions these elements already had are kept) */
+.tile-media { transition: transform 1.2s var(--ease), filter 0.45s ease; }
+.cards { transition: filter 0.45s ease; }
+.thumbs button img { transition: opacity 0.25s, transform 0.5s var(--ease), filter 0.45s ease; }
+.cook .stage { transition: filter 0.45s ease, box-shadow 0.45s ease; }
+.tile { transition: box-shadow 0.35s ease; }
+.social { transition: background 0.22s, color 0.22s, box-shadow 0.3s, transform 0.35s var(--spring); }
+.pl-pill { transition: transform 0.5s cubic-bezier(.3, 1.25, .4, 1), height 0.3s var(--ease), background 0.35s, box-shadow 0.35s; }
+
+
+/* ---------------------------------------------------------
+   4. Scroll-driven hero: as the hero scrolls away the name tips back and the blade goes back in its hilt;
+   scrolling up reverses both. Runs on the compositor; skipped where unsupported or motion is reduced.
+   --------------------------------------------------------- */
+.hero-word { display: block; transform-origin: 50% 85%; }
+@keyframes tilt-back { to { transform: perspective(1200px) rotateX(58deg) translateY(-8%); opacity: 0.15; } }
+@keyframes sheathe   { to { scale: 0 1; } }
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    /* The timelines sit in their own, more specific rules on purpose: the CSS minifier otherwise folds
+       animation-timeline into the animation shorthand, a form Chrome rejects (the effect silently stops). */
+    .hero { view-timeline: --hero block; }
+
+    .hero-word { animation: tilt-back linear both; }
+    .hero .hero-word { animation-timeline: --hero; animation-range: exit 0% exit 50%; }
+
+    .blade .aura { transform-box: view-box; transform-origin: 96px 20px; }
+    .blade .edge { animation: unsheathe 0.5s var(--snap) 1.75s both, sheathe linear forwards; }
+    .blade .aura { animation: fade-in 0.8s ease 2.1s both, sheathe linear forwards; }
+    .hero .blade :is(.edge, .aura) { animation-timeline: auto, --hero; animation-range: normal, exit 0% exit 38%; }
+
+    .vt .blade :is(.edge, .aura) { animation: sheathe linear forwards; }
+    .vt .hero .blade :is(.edge, .aura) { animation-timeline: --hero; animation-range: exit 0% exit 38%; }
+  }
+}
+
+
+/* ---------------------------------------------------------
+   Reduced motion: no slices, no glitches, no pulse. Eagle vision still works (it just appears).
+   --------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .sync, .eagle-ring { display: none; }
+  html:is(.fresh, .vt) body > :is(.nav, main, .footer) { animation: none; }
+  .cook .stage.synced .slide.active::after { animation: none; }
+}

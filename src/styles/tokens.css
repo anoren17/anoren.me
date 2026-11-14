@@ -20,6 +20,10 @@
   --mint:      #D4FFF6;   /* where it catches the light */
   --ink:       #031014;   /* text on turquoise fills */
 
+  /* eagle vision's "target" colour — only ever shown while eagle vision is held */
+  --gold:      #FFC94D;
+  --gold-glow: rgba(255, 201, 77, 0.6);
+
   /* the one warm colour — only for hearts and diamonds */
   --red:       #FF4D5E;
   --red-deep:  #C9142E;   /* the same, on turquoise or on a white card */
